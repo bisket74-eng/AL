@@ -1,0 +1,4 @@
+project_id = "ghnuahsovbpyzrjvbylp"
+
+[functions.employee-bidding]
+verify_jwt = false
