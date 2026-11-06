@@ -53,7 +53,8 @@ Deno.serve(async req=>{
    s.selections=s.selections.filter((x:any)=>!old.includes(x));
    s.selections.push({id:crypto.randomUUID(),employeeId:employee.id,officeId:office.id,year:invite.leave_year,round:invite.bidding_round,weeks:chosen,method:"Employee online submission",submittedAt:new Date().toISOString()});
    const {error:saveError}=await admin.from("annual_leave_app_state").update({payload:s}).eq("id","main");if(saveError)throw saveError;
-   const {error:doneError}=await admin.from("annual_leave_bid_invites").update({status:"submitted",submitted_at:new Date().toISOString()}).eq("id",invite.id).eq("status","open");if(doneError)throw doneError;
+   const submittedAt=new Date().toISOString();const {error:doneError}=await admin.from("annual_leave_bid_invites").update({status:"submitted",submitted_at:submittedAt}).eq("id",invite.id).eq("status","open");if(doneError)throw doneError;
+   const {error:recordError}=await admin.from("annual_leave_bid_submissions").insert({invite_id:invite.id,employee_id:employee.id,office_id:office.id,leave_year:invite.leave_year,bidding_round:invite.bidding_round,weeks:chosen,submitted_at:submittedAt});if(recordError)throw recordError;
    return json({success:true});
   }
   return json({error:"Unknown action."},400);
