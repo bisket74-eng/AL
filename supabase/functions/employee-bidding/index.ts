@@ -27,7 +27,7 @@ Deno.serve(async req=>{
   }
   if(action==="get"){
    const invite=await getInvite(body.token);
-   const {data:row,error}=await admin.from("annual_leave_app_state").select("payload").eq("id","main").single();if(error)throw error;const s=row.payload;
+   const {data:row,error}=await admin.from("annual_leave_app_state").select("payload,updated_at").eq("id","main").single();if(error)throw error;const s=row.payload;
    const employee=s.employees.find((e:any)=>e.id===invite.employee_id&&e.officeId===invite.office_id&&e.active!==false),office=s.offices.find((o:any)=>o.id===invite.office_id);
    if(!employee||!office||Number(s.year)!==invite.leave_year)throw new Error("The board has changed. Please ask your supervisor for a new link.");
    const roster=s.employees.filter((e:any)=>e.officeId===office.id&&e.active!==false).sort((a:any,b:any)=>String(a.seniority).localeCompare(String(b.seniority)));
@@ -52,7 +52,7 @@ Deno.serve(async req=>{
    if(invite.bidding_round===1&&blocks(chosen)>2)return json({error:"First-round selections may be split into no more than two blocks."},400);
    s.selections=s.selections.filter((x:any)=>!old.includes(x));
    s.selections.push({id:crypto.randomUUID(),employeeId:employee.id,officeId:office.id,year:invite.leave_year,round:invite.bidding_round,weeks:chosen,method:"Employee online submission",submittedAt:new Date().toISOString()});
-   const {error:saveError}=await admin.from("annual_leave_app_state").update({payload:s}).eq("id","main");if(saveError)throw saveError;
+   const {data:savedRows,error:saveError}=await admin.from("annual_leave_app_state").update({payload:s}).eq("id","main").eq("updated_at",row.updated_at).select("id");if(saveError)throw saveError;if(!savedRows||savedRows.length!==1)return json({error:"The master board changed while you were submitting. Please reopen your link and submit again."},409);
    const submittedAt=new Date().toISOString();const {error:doneError}=await admin.from("annual_leave_bid_invites").update({status:"submitted",submitted_at:submittedAt}).eq("id",invite.id).eq("status","open");if(doneError)throw doneError;
    const {error:recordError}=await admin.from("annual_leave_bid_submissions").insert({invite_id:invite.id,employee_id:employee.id,office_id:office.id,leave_year:invite.leave_year,bidding_round:invite.bidding_round,weeks:chosen,submitted_at:submittedAt});if(recordError)throw recordError;
    return json({success:true});
