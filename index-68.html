@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#17324d">
+<title>Annual Leave Bidding | Admin</title>
+<style>
+:root{--navy:#17324d;--navy2:#244967;--ink:#1c2935;--muted:#687887;--line:#dce3e9;--bg:#f3f6f8;--white:#fff;--teal:#167c80;--tealbg:#e7f4f3;--gold:#9a6a12;--goldbg:#fff5df;--red:#a33d3d;--redbg:#faeaea;--shadow:0 8px 28px #18334a12}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.shell{min-height:100vh}.topbar{background:var(--navy);color:white;padding:17px 26px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:13px}.logo{width:42px;height:42px;border-radius:12px;background:#ffffff1c;display:grid;place-items:center;font-size:22px}.brand h1{font-size:18px;margin:0}.brand p{margin:2px 0 0;color:#c9d7e1;font-size:12px}.top-actions{display:flex;align-items:center;gap:10px}.year-pill{border:1px solid #ffffff55;padding:7px 12px;border-radius:9px;color:#fff;background:#ffffff10}.layout{display:grid;grid-template-columns:245px minmax(0,1fr);min-height:calc(100vh - 76px)}aside{background:#fff;border-right:1px solid var(--line);padding:20px 14px}.nav-label{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#8794a0;font-weight:700;padding:8px 12px}.nav button{width:100%;border:0;background:transparent;text-align:left;padding:11px 12px;border-radius:9px;color:#405364;margin:2px 0;display:flex;gap:11px;align-items:center}.nav button.active{background:#eaf0f5;color:var(--navy);font-weight:700}.nav button:hover{background:#f1f5f7}.nav .ico{width:20px;text-align:center}.aside-note{margin:24px 8px;padding:12px;background:#f4f7f9;border-radius:10px;color:#62717d;font-size:12px}.main{padding:27px;max-width:1600px;width:100%;margin:0 auto}.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:22px}.page-head h2{margin:0;font-size:25px;letter-spacing:-.02em}.page-head p{margin:5px 0 0;color:var(--muted)}.btn{border:1px solid var(--line);background:#fff;color:#34495a;border-radius:9px;padding:9px 13px;font-weight:650}.btn:hover{background:#f6f8fa}.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}.btn.teal{background:var(--teal);border-color:var(--teal);color:#fff}.btn.danger{color:var(--red);border-color:#e8caca}.btn.small{padding:6px 9px;font-size:13px}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow)}.stat{padding:17px}.stat .label{color:var(--muted);font-size:13px}.stat strong{display:block;font-size:28px;margin-top:5px;color:var(--navy)}.panel{padding:19px;margin-bottom:17px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.panel h3{font-size:16px;margin:0}.muted{color:var(--muted)}.tiny{font-size:12px}.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:17px}.office-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.office{border:1px solid var(--line);border-radius:11px;padding:13px;display:flex;justify-content:space-between;gap:10px;align-items:center}.office strong{display:block;font-size:14px}.office small{color:var(--muted)}.tag{display:inline-flex;align-items:center;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:700;background:#eef2f5;color:#536575}.tag.blocked{background:var(--redbg);color:var(--red)}.tag.open{background:var(--tealbg);color:var(--teal)}.tag.warn{background:var(--goldbg);color:var(--gold)}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px}table{border-collapse:collapse;width:100%;min-width:650px;background:#fff}th,td{text-align:left;padding:11px 12px;border-bottom:1px solid #e9eef1;font-size:13px}th{background:#f7f9fa;color:#60717e;font-size:11px;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0}tr:last-child td{border-bottom:0}td input,td select{width:100%;min-width:90px}.field{display:flex;flex-direction:column;gap:5px;margin:10px 0}.field label{font-size:12px;font-weight:700;color:#526372}.field input,.field select,.field textarea,input,select,textarea{border:1px solid #ccd6de;border-radius:8px;padding:9px 10px;background:#fff;color:var(--ink)}.field input:focus,.field select:focus,input:focus,select:focus{outline:2px solid #9cc9ca;outline-offset:1px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.week-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.week{border:1px solid var(--line);border-radius:9px;padding:10px;background:#fff;min-height:70px}.week strong{display:block;font-size:13px}.week small{color:var(--muted)}.week.blackout{background:#f0f1f2;border-color:#c7cdd2;color:#59636b}.week.taken{background:#fceeee;border-color:#e9caca}.week input{margin-right:6px}.notice{padding:12px 14px;border-radius:9px;background:#edf3f7;color:#425c70;font-size:13px;margin:12px 0}.notice.warn{background:var(--goldbg);color:#755316}.notice.danger{background:var(--redbg);color:#873737}.hidden{display:none!important}.empty{padding:28px;text-align:center;color:var(--muted)}.modal-back{position:fixed;inset:0;background:#10233480;display:grid;place-items:center;padding:16px;z-index:5}.modal{width:min(560px,100%);background:white;border-radius:14px;padding:22px;box-shadow:0 20px 60px #0003;max-height:90vh;overflow:auto}.modal h3{margin:0 0 6px}.modal-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.footer{color:#7c8994;font-size:12px;text-align:center;padding:10px}.pilltabs{display:flex;gap:6px;flex-wrap:wrap}.pilltabs button{border:1px solid var(--line);background:#fff;padding:7px 11px;border-radius:8px;color:#516271}.pilltabs button.active{background:var(--navy);border-color:var(--navy);color:#fff}.calendar-month{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.dayhead{text-align:center;color:var(--muted);font-size:11px;font-weight:700;padding:5px}.day{background:#fff;border:1px solid var(--line);border-radius:7px;min-height:65px;padding:6px;font-size:12px}.day .holiday{display:block;color:var(--teal);font-size:10px}.day .blocked{display:block;color:var(--red);font-size:10px}.mobile-nav{display:none}
+/* simple paper-board workspace */
+.simple-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 16px}.simple-tabs button{border:1px solid #b9c5ce;background:#fff;border-radius:5px;padding:8px 11px;font-size:13px}.simple-tabs button.active{background:#17324d;color:#fff;border-color:#17324d}.board-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.board-paper{background:#fff;border:1px solid #aeb8c0;padding:14px;overflow:auto}.board-paper h2{text-align:center;font-size:18px;margin:0}.board-paper .sub{text-align:center;font-size:12px;margin:2px 0 12px}.board-table{width:100%;min-width:850px;border-collapse:collapse;table-layout:fixed}.board-table th,.board-table td{border:1px solid #8d969d;padding:5px 6px;font-size:12px;vertical-align:middle}.board-table th{background:#f4f5f5;color:#17232d;text-transform:none;letter-spacing:0;position:static;text-align:center}.board-table .weekcol{width:105px}.board-table .employee{width:160px}.board-table .seniority{width:125px}.board-table .roundcol{width:150px}.board-table .entitle{width:65px}.board-table .black{background:#4f5961!important;color:#fff}.week-drop{min-height:30px;background:#fff}.week-drop.over{background:#e6f2f4}.assigned{display:inline-flex;align-items:center;gap:5px;background:#e7f1f4;border:1px solid #b8cbd3;border-radius:4px;padding:3px 6px;margin:2px;font-size:11px}.assigned button{border:0;background:transparent;color:#8b3030;font-weight:bold;padding:0 2px}.roster-name{cursor:grab;font-weight:600}.roster-name:active{cursor:grabbing}.roster-name[draggable=true]{user-select:none}.board-help{font-size:12px;color:#596a77;margin:8px 0 0}.board-select{border:1px solid #aeb8c0;border-radius:5px;padding:7px;background:#fff}
+@media print{.simple-tabs,.board-actions,.board-help,.topbar,.layout,.mobile-nav{display:none!important}.board-paper{border:0;padding:0}.board-table{min-width:0}.board-table th,.board-table td{font-size:8px;padding:3px;height:18px}.assigned{border:0;background:transparent;padding:0}.assigned button{display:none}}
+@media(max-width:950px){.cards{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.week-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.topbar{padding:13px 15px}.brand p,.top-actions .year-pill{display:none}.layout{display:block}aside{display:none}.main{padding:17px 13px 85px}.page-head{display:block}.page-head .toolbar{margin-top:12px}.cards{gap:9px}.stat{padding:13px}.stat strong{font-size:24px}.office-grid{grid-template-columns:1fr}.week-grid{grid-template-columns:repeat(2,1fr)}.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);z-index:4;justify-content:space-around;padding:7px 3px calc(7px + env(safe-area-inset-bottom))}.mobile-nav button{border:0;background:transparent;color:#657481;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px}.mobile-nav button.active{color:var(--navy);font-weight:800}.mobile-nav span{font-size:18px}.form-row{grid-template-columns:1fr}.panel{padding:14px}.calendar-month{gap:3px}.day{min-height:55px;padding:4px;font-size:11px}}
+
+@media print{
+ @page{size:letter portrait;margin:0.32in}
+ body{background:#fff!important;color:#111!important;font-family:Arial,sans-serif}
+ .topbar,.layout,.mobile-nav,#modalRoot{display:none!important}
+ #printRoot{display:block!important}
+ .paper-board{page-break-after:always;break-after:page;width:100%;min-height:9.9in;position:relative}
+ .paper-board:last-child{page-break-after:auto;break-after:auto}
+ .paper-board header{text-align:center;margin:0 0 12px}
+ .paper-board .master-copy{font-family:"Comic Sans MS",cursive;font-size:17px;font-weight:bold;text-decoration:underline;text-decoration-color:#dce76b;text-decoration-thickness:7px;text-underline-offset:-3px;margin-bottom:4px}
+ .paper-board h2{font-size:14px;font-weight:normal;margin:0 0 2px}
+ .paper-board header p{font-size:12px;margin:0}
+ .paper-grid{border-collapse:collapse;width:100%;table-layout:fixed;min-width:0;margin:0}
+ .paper-grid th,.paper-grid td{border:1px solid #777;padding:2.5px 4px;font-size:9px;line-height:1.18;height:15px;vertical-align:middle}
+ .paper-grid th{background:#fff!important;text-align:center;font-weight:normal;position:static;text-transform:none;letter-spacing:0;color:#111}
+ .paper-grid th:nth-child(1),.paper-grid td:nth-child(1){width:8%}
+ .paper-grid th:nth-child(2),.paper-grid td:nth-child(2){width:8%}
+ .paper-grid th:nth-child(3),.paper-grid td:nth-child(3){width:22%;text-align:left;background:#fff!important}
+ .paper-grid th:nth-child(4),.paper-grid td:nth-child(4){width:18%;text-align:left}
+ .paper-grid th:nth-child(5),.paper-grid td:nth-child(5){width:11%}
+ .paper-grid th:nth-child(6),.paper-grid td:nth-child(6){width:8%}
+ .paper-grid th:nth-child(7),.paper-grid td:nth-child(7){width:8%}
+ .paper-grid th:nth-child(8),.paper-grid td:nth-child(8){width:8%}
+ 
+ .paper-grid .datecell{text-align:center;white-space:nowrap}
+ .paper-grid td:nth-child(1),.paper-grid td:nth-child(2){text-align:center!important;white-space:nowrap}
+ .paper-grid td:nth-child(5){text-align:left!important}
+ .paper-grid td:nth-child(6),.paper-grid td:nth-child(9){text-align:center!important}
+ .paper-grid td:nth-child(4){padding:0!important}
+ .paper-grid .week-employee,.paper-grid .employee-name{font-size:10.5px!important;line-height:1.05!important}
+ .paper-grid .week-employee{background:#fff!important;text-align:left;font-weight:600;white-space:normal;overflow-wrap:anywhere}
+ .paper-grid .roundpick{font-size:6.5px;line-height:1.1;overflow-wrap:anywhere;text-align:center}
+ .paper-grid .employee-name{font-weight:600;text-align:left}.paper-grid .holiday-cell{font-size:9px;text-align:left}.paper-grid .week-employee.print-blackout{background:#111!important;color:#111!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.print-key{border:1px solid #777;padding:5px 7px;margin-top:7px;font-size:8.5px;line-height:1.3}.paper-board footer{text-align:center;font-size:10px;margin-top:8px}
+ .paper-board footer{text-align:center;font-size:9px;margin-top:14px}
+ /* Fit the complete annual board on one printed page */
+ @page{size:letter portrait;margin:0.10in}
+ html,body{margin:0!important;padding:0!important}
+ #printRoot{margin:0!important;padding:0!important}
+ .paper-board{width:100%!important;min-height:0!important;margin:0!important;padding:0!important;page-break-after:avoid!important;break-after:avoid-page!important;page-break-inside:avoid!important;break-inside:avoid!important}
+ .paper-board header{margin:0 0 4px!important}
+ .paper-board .master-copy{font-size:14px!important;margin-bottom:1px!important;text-decoration-thickness:5px!important}
+ .paper-board h2{font-size:11px!important;margin:0!important}
+ .paper-board header p{font-size:9px!important}
+ .paper-grid{width:100%!important}
+ .paper-grid th,.paper-grid td{font-size:7.5px!important;line-height:1.02!important;padding:1px 2px!important;height:10px!important}
+ .paper-grid th{font-size:7px!important}
+ .paper-grid .roundpick{font-size:6.5px!important;line-height:1!important}
+ .print-key{font-size:7px!important;line-height:1.12!important;padding:3px 4px!important;margin-top:4px!important}
+ .paper-board footer{font-size:7.5px!important;margin-top:4px!important}
+ /* Landscape master board: header + all weekly rows + small rules footer on one page */
+ @page{size:letter landscape;margin:0.22in}
+ html,body{margin:0!important;padding:0!important;width:100%!important}
+ #printRoot{display:block!important;margin:0!important;padding:0!important}
+ .paper-board{width:100%!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;page-break-after:avoid!important;break-after:avoid-page!important;page-break-inside:avoid!important;break-inside:avoid!important}
+ .paper-board header{margin:0 0 5px!important}
+ .paper-board .master-copy{font-size:13px!important;margin:0 0 1px!important}
+ .paper-board h2{font-size:12px!important;line-height:1.1!important}
+ .paper-board header p{font-size:8px!important;line-height:1.1!important}
+ .paper-grid{width:100%!important;table-layout:fixed!important}
+ .paper-grid th,.paper-grid td{font-size:7px!important;line-height:1!important;padding:1px 3px!important;height:8.8px!important}
+ .paper-grid th{font-size:7px!important}
+ .paper-grid .roundpick{font-size:6.5px!important;line-height:1!important}
+ .paper-grid .week-employee.print-blackout{background:#000!important;color:#000!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+ .print-key{font-size:6.5px!important;line-height:1.1!important;padding:2px 4px!important;margin-top:4px!important}
+ .paper-board footer{font-size:7px!important;line-height:1.1!important;margin-top:3px!important}
+}
+
+/* compact, equal board selector and phone-first board layout */
+.simple-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.simple-tabs button{min-width:0;min-height:52px;padding:8px 7px;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2;overflow-wrap:anywhere;font-size:13px}
+.board-section{margin:16px 0 20px;scroll-margin-top:12px}.board-section h3{font-size:16px;margin:0 0 8px}
+.roster-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.roster-card{min-width:0;background:#fff;border:1px solid var(--line);border-radius:8px;padding:9px}
+.roster-card .roster-name{font-size:14px;overflow-wrap:anywhere}.roster-meta{font-size:11px;color:var(--muted);overflow-wrap:anywhere;margin-top:3px}
+.board-paper{padding:8px;overflow:visible}.board-table{min-width:0;width:100%}.board-table .weekcol{width:105px}.board-table th,.board-table td{padding:6px 5px;font-size:12px;overflow-wrap:anywhere}.board-table .weekcol small{display:block;color:#687887;font-weight:400}.week-drop{cursor:pointer;min-height:42px}
+@media(max-width:700px){.simple-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.simple-tabs button{min-height:48px;font-size:12px}.roster-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.roster-card{padding:7px}.roster-card .roster-name{font-size:13px}.roster-meta{font-size:10px}.board-paper{padding:5px}.board-table{min-width:0;table-layout:fixed}.board-table .weekcol{width:88px}.board-table th,.board-table td{font-size:11px;padding:5px 4px}.assigned{max-width:100%;white-space:normal;overflow-wrap:anywhere}.board-actions{margin:8px 0}.page-head h2{font-size:21px}}
+#printRoot{display:none}
+
+/* Compact employee cards and phone-friendly weekly calendar */
+.roster-card{padding:8px 10px!important}
+.roster-line{display:flex;align-items:center;gap:8px;min-width:0}
+.roster-line .roster-name{flex:0 1 auto;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.roster-seniority{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1 1 auto}
+.roster-entitlement{font-size:19px;line-height:1;color:var(--navy);min-width:22px;text-align:right}
+.board-table{width:100%!important;min-width:0!important;table-layout:fixed}
+.board-table .weekcol{width:43%!important;white-space:nowrap}
+.board-table .weekcol b{white-space:nowrap;font-size:12px}
+.board-table .week-drop{width:57%;overflow-wrap:anywhere}
+.board-table .weekcol small{display:none!important}
+@media(max-width:700px){
+ .roster-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .roster-card{padding:7px!important}
+ .roster-line{gap:5px}
+ .roster-line .roster-name{font-size:12px}
+ .roster-seniority{font-size:10px}
+ .roster-entitlement{font-size:18px}
+ .board-paper{padding:5px}
+ .board-table .weekcol{width:43%!important}
+ .board-table .week-drop{width:57%;min-width:0}
+}
+
+/* Print layout modeled on the supplied original paper board */
+@page { size: letter portrait; margin: 0.22in 0.24in; }
+@media print {
+ html,body{width:100%!important;height:auto!important;margin:0!important;padding:0!important;background:#fff!important}
+ body{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+ .shell,.topbar,.layout,.mobile-nav,#modalRoot{display:none!important}
+ #printRoot{display:block!important;position:static!important;width:100%!important;height:auto!important;margin:0!important;padding:0!important}
+ .paper-board{display:block!important;width:100%!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;page-break-after:auto!important;break-after:auto!important;page-break-inside:avoid!important;break-inside:avoid!important}
+ .paper-board header{text-align:center;margin:0 0 0.12in!important;padding:0!important}
+ .paper-board .master-copy{font-family:"Comic Sans MS",cursive;font-size:19px!important;font-weight:bold;text-decoration:underline;text-decoration-color:#ddd;text-decoration-thickness:6px;text-underline-offset:-3px;margin:0 0 4px!important}
+ .paper-board h2{font-family:Arial,sans-serif;font-size:15px!important;font-weight:normal;margin:0!important;line-height:1.1!important}
+ .paper-board header p{display:none!important}
+ .paper-grid{width:100%!important;min-width:0!important;table-layout:fixed!important;border-collapse:collapse!important;margin:0!important}
+ .paper-grid th,.paper-grid td{border:1px solid #555!important;padding:1px 3px!important;height:0.171in!important;min-height:0!important;font-family:Arial,sans-serif!important;font-size:8.5px!important;line-height:1.05!important;vertical-align:middle!important;color:#111!important}
+ .paper-grid thead th{font-size:9px!important;font-weight:normal!important;text-align:center!important;height:0.19in!important;background:#fff!important}
+
+
+
+
+
+
+
+
+
+ .paper-grid .week-employee{background:#fff!important;white-space:normal!important;overflow-wrap:anywhere!important;font-weight:600!important}
+ .paper-grid .blackout-band{position:relative!important;background:#666!important;border-top:0!important;border-bottom:0!important;border-left:1px solid #555!important;border-right:1px solid #555!important;padding:0!important}.paper-grid .blackout-band:after{content:"";position:absolute;z-index:3;left:0;right:0;top:-1px;bottom:-1px;background:#666!important;pointer-events:none}
+ .paper-grid .week-employee.print-blackout{background:#000!important;color:#000!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+ .paper-grid .employee-name{font-weight:600!important}
+ .paper-grid .roundpick{text-align:center!important;font-size:8px!important;overflow-wrap:anywhere!important}
+ .paper-grid .holiday-entry,.paper-grid .holiday-heading{font-size:7.5px!important;line-height:1.05!important;text-align:center!important;white-space:nowrap!important;padding:1px!important}.paper-grid .holiday-heading{font-weight:bold!important;border:1px solid #555!important}
+ .paper-board footer{text-align:center;font-family:Arial,sans-serif!important;font-size:10px!important;line-height:1.15!important;margin:0.13in 0 0!important;padding:0!important}
+}
+/* Shared database sign-in and sync status */
+.auth-gate{position:fixed;inset:0;z-index:10000;background:linear-gradient(135deg,#17324d,#244967);display:grid;place-items:center;padding:20px}
+.auth-card{width:min(100%,420px);background:#fff;border-radius:18px;padding:28px;box-shadow:0 24px 70px #07182766}
+.auth-card h2{margin:0 0 6px;color:var(--navy);font-size:23px}.auth-card p{color:var(--muted);margin:0 0 20px}
+.auth-card label{display:block;font-size:13px;font-weight:700;margin:13px 0 5px}
+.auth-card input{width:100%;padding:12px;border:1px solid var(--line);border-radius:9px}
+.auth-card button{width:100%;margin-top:17px;padding:12px}
+.auth-error{color:#a33d3d;font-size:13px;margin-top:12px;min-height:18px}
+#syncStatus{font-size:11px;color:#d7e5ef;padding:5px 8px;border:1px solid #ffffff44;border-radius:8px}
+
+</style>
+</head>
+<body>
+<div id="authGate" class="auth-gate">
+ <form class="auth-card" id="loginForm">
+  <div class="logo" style="background:#eaf0f5;color:#17324d;margin-bottom:16px">▦</div>
+  <h2>Annual Leave Bidding</h2>
+  <p>Sign in to access the shared bidding boards.</p>
+  <label for="loginUsername">Username</label>
+  <input id="loginUsername" autocomplete="username" value="LeaveAdmin" required>
+  <label for="loginPassword">Password</label>
+  <input id="loginPassword" type="password" autocomplete="current-password" required>
+  <button class="btn primary" type="submit" id="loginButton">Sign in</button>
+  <div class="auth-error" id="loginError" role="alert"></div>
+ </form>
+</div>
+<div class="shell" id="appShell" style="display:none">
+<header class="topbar">
+ <div class="brand"><div class="logo">▦</div><div><h1>Annual Leave Bidding</h1><p>Manual administrator workspace · 2027</p></div></div>
+ <div class="top-actions"><span id="syncStatus">Not connected</span><span class="year-pill">Leave year <b id="topYear">2027</b></span><button class="btn small" id="printYearBtn" onclick="printYear()">Print year</button><button class="btn small" id="exportBtn">Export data</button></div>
+</header>
+<div class="layout">
+<aside><div class="nav-label">Annual leave</div><nav class="nav" id="sideNav">
+<button class="active" data-page="boards"><span class="ico">▤</span>Seven bidding lists</button>
+<button data-page="employees"><span class="ico">♙</span>Employee directory</button>
+<button data-page="settings"><span class="ico">⚙</span>Year settings</button>
+</nav><div class="aside-note"><b>Prototype mode</b><br>Changes are saved in this browser only. Connect a secure database before using this for official bidding.</div></aside>
+<main class="main" id="main"></main>
+</div>
+<nav class="mobile-nav" id="mobileNav">
+<button class="active" data-jump="top"><span>▤</span>Boards</button><button data-jump="peopleSection"><span>♙</span>People</button><button data-jump="calendarSection"><span>▣</span>Weeks</button><button onclick="printYear()"><span>▧</span>Print</button><button data-jump="settingsHub" onclick="setPage('settingsHub')"><span>⚙</span>Settings</button>
+</nav>
+</div>
+<div id="modalRoot"></div><div id="printRoot"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const DEFAULT_OFFICES=[
+{name:"Main Office Window Clerks",group:"A",christmas:true},
+{name:"MOU Distribution Clerks",group:"A",christmas:true},
+{name:"EVDCU Clerks – Tour 1",group:"B",christmas:false},
+{name:"Orchards / Cascade Park Retail",group:"B",christmas:false},
+{name:"Admin / Downtown Retail",group:"A",christmas:true},
+{name:"EVDCU Clerks – Tour 2",group:"B",christmas:false},
+{name:"Custodians / Maintenance",group:"always",christmas:false}
+];
+const HOLIDAYS=["New Year's Day","Martin Luther King Jr. Day","Presidents Day","Memorial Day","Juneteenth","Independence Day","Labor Day","Columbus Day","Veterans Day","Thanksgiving","Christmas"];
+const ROSTERS=[
+// Main Office Window Clerks — page 1
+[["Patterson","1998031402",5],["Bernardino","2008041201",5],["Leaupepe","20221121801",4],["Parker","2023011401",4],["Lambert","2023042201",4],["Savage","2024012701",4],["Ige","2024062901",2],["Riley","2024122801",2],["Aguon","2026103101",2]],
+// MOU Distribution Clerks — page 2
+[["Beers","2019072001",5],["O'Keefe","2021022701",5],["Richards","2022042301",4],["Leben","2024042001",4],["Corbett","2025022201",2],["Potts","2026101702",2],["Fouts","BIS 12/28",2]],
+// EVDCU Tour 1 — page 3
+[["Hoglund","2017012101",4],["Henderson","2025012501",2],["Carranza","2025040501",4],["Casci","2025092001",2],["Farnsworth","2026012401",4],["Smythe","2026022101",2],["Delcid","2026101701",2],["Araiza","BIS 05/02",2]],
+// Orchards / Cascade Park Retail — page 4
+[["Flores","2002111601",5],["Martin M","2006021801",5],["White R","2013082401",5],["Paul","2019083102",4],["Sorenson","2019091401",5],["Gildart","2022052101",4],["Bautista","2022052102",4],["Forbes","2022111201",4],["Royer","2024022401",2]],
+// Admin / Downtown Retail — page 5
+[["Steglich","1993082101",5],["Castro S","1998021401",5],["Figueras","1998031401",5],["Smith","1999042401",5],["Stockton","2014112902",4],["Melvin","2019083101",4],["Sakamaki","2021120401",4],["Burke","2023072901",4]],
+// EVDCU Tour 2 — page 6
+[["Brown","2003033101",5],["Malloy","2014090601",5],["Ahn","2014112901",4],["Gaddis","2019060201",5],["Khotchasene","2021061801",4],["Galeai","2023022501",4],["Dove","2023120201",4]],
+// Custodians / Maintenance — page 7
+[["Padaca M","2018033101",5],["Oneil J","2020010401",5],["McCaleb","2020070401",4],["James","2025062801",4],["Hixson","2025080901",2],["Wonch","2026050201",2]]
+];
+const seed={year:2027,unionStart:"2027-04-26",unionEnd:"2027-05-02",leaveAvailable:"2027-01-23",weekStart:"Monday",offices:DEFAULT_OFFICES.map((o,i)=>({...o,id:i+1})),employees:ROSTERS.flatMap((rows,i)=>rows.map((r,j)=>({id:`seed-${i+1}-${j+1}`,first:"",last:r[0],seniority:r[1],entitlement:r[2],officeId:i+1,active:true}))),selections:[],round:1,deadlineHours:24,holidays:HOLIDAYS,notes:"Early-year leave may require a balance carried over from the previous year. Employees should verify their available balance."};
+let state;try{state=JSON.parse(localStorage.getItem("alBidPrototype"))||structuredClone(seed)}catch(e){state=JSON.parse(JSON.stringify(seed))}
+if(!state.employees || state.employees.length===0){state.employees=JSON.parse(JSON.stringify(seed.employees));safeLocalBackup()}
+let page="boards",selectedOffice=1;
+const SUPABASE_URL="https://ghnuahsovbpyzrjvbylp.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_1Z7ddDl3qiL-8LRLhtML8Q_EOyJs6E2";
+let supabaseClient=null,cloudReady=false,cloudTimer=null,cloudBusy=false,realtimeChannel=null;
+function safeLocalBackup(){
+ // Browser storage is optional; Supabase is the authoritative shared copy.
+ try{localStorage.setItem("alBidPrototype",JSON.stringify(state));return true}
+ catch(err){console.warn("Local backup unavailable; cloud data remains accessible",err);return false}
+}
+function setSyncStatus(message){const el=document.getElementById("syncStatus");if(el)el.textContent=message}
+function save(){
+ safeLocalBackup();
+ if(!cloudReady||!supabaseClient)return;
+ setSyncStatus("Saving…");
+ clearTimeout(cloudTimer);
+ cloudTimer=setTimeout(async()=>{
+  if(cloudBusy)return;
+  cloudBusy=true;
+  try{
+   const {error}=await supabaseClient.from("annual_leave_app_state").upsert({id:"main",payload:state},{onConflict:"id"});
+   if(error)throw error;
+   setSyncStatus("Synced");
+  }catch(err){console.error("Cloud save failed",err);setSyncStatus("Sync error");}
+  finally{cloudBusy=false;}
+ },350);
+}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function dateAdd(d,n){let x=new Date(d+"T12:00:00");x.setDate(x.getDate()+n);return x}
+function fmt(d){return new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric"}).format(d)}
+function weeks(){let out=[],d=new Date(state.year,0,1,12);while(d.getDay()!==1)d.setDate(d.getDate()+1);let n=1;while(d.getFullYear()<=state.year){let e=dateAdd(d.toISOString().slice(0,10),6);out.push({n:n++,start:new Date(d),end:e});d.setDate(d.getDate()+7)}return out}
+function christmasBlocked(o){if(o.group==="always")return false;let blocked=(state.year%2===1);return o.group==="A"?blocked:!blocked}
+function unionWeek(w){return w.start<=new Date(state.unionEnd+"T23:59:59")&&w.end>=new Date(state.unionStart+"T00:00:00")}
+function blocked(o,w){let x=w.start,y=w.end;let christmasStart=new Date(state.year,11,20,12),christmasEnd=new Date(state.year+1,0,3,12);return unionWeek(w)||(christmasBlocked(o)&&x<=christmasEnd&&y>=christmasStart)}
+function taken(o,w,exclude){return state.selections.some(s=>s.officeId===o.id&&s.year===state.year&&s.weeks.includes(w.n)&&s.employeeId!==exclude)}
+function empOrder(list){return list.slice().sort((a,b)=>a.seniority.localeCompare(b.seniority)||a.last.localeCompare(b.last))}
+function setPage(p){page=p;document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===p));render()}
+function head(title,sub,actions=""){return `<div class="page-head"><div><h2>${title}</h2><p>${sub}</p></div><div class="toolbar">${actions}</div></div>`}
+function render(){document.getElementById("topYear").textContent=state.year;const m=document.getElementById("main");({dashboard,boards,employees,calendar,bidding,settings,settingsHub}[page]||boardPage)(m)}
+function boardPage(m){
+ const office=state.offices.find(o=>o.id===selectedOffice)||state.offices[0];
+ const roster=empOrder(state.employees.filter(e=>e.officeId===office.id&&e.active!==false));
+ const ws=weeks();
+ const rows=ws.map(w=>{let assigned=state.selections.filter(s=>s.officeId===office.id&&s.year===state.year&&s.weeks.includes(w.n));let chips=assigned.map(s=>{let e=state.employees.find(x=>x.id===s.employeeId);return e?`<span class="assigned">${esc(e.last)} <small>R${s.round}</small><button title="Remove assignment" onclick="removeWeek('${e.id}',${w.n},${s.round})">×</button></span>`:""}).join("");let blockedNow=blocked(office,w);return `<tr><td class="weekcol"><b>${fmt(w.start)} – ${fmt(w.end)}</b></td><td class="week-drop ${blockedNow?'black':''}" data-week="${w.n}" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="dropEmployee(event,${w.n})" onclick="assignWeek(${w.n})">${blockedNow?(unionWeek(w)?'UNION BLACKOUT':'CHRISTMAS BLACKOUT'):chips||'<span class="muted">Tap or drop employee here</span>'}</td></tr>`}).join("");
+ m.innerHTML=`<div class="page-head"><div><h2>Annual Leave Board · ${state.year}</h2><p>Choose a board, then choose an employee and assign their weeks.</p></div><div class="toolbar"><button class="btn" onclick="printYear()">Print this board</button></div></div>
+ <div class="simple-tabs">${state.offices.map(o=>`<button class="${o.id===office.id?'active':''}" onclick="selectedOffice=${o.id};render()">${esc(o.name.replace(' Clerks','').replace('EVDCU Clerks – ','EVDCU '))}</button>`).join('')}</div>
+ <div class="board-actions"><label>Round <select class="board-select" id="boardRound" onchange="state.round=Number(this.value);save();render()"><option value="1" ${state.round===1?'selected':''}>First round</option><option value="2" ${state.round===2?'selected':''}>Second round</option></select></label><span class="tag">${roster.length} employees</span></div>
+ <section id="peopleSection" class="board-section"><h3>Employees · ${esc(office.name)}</h3><p class="board-help">Drag a name onto a week below, or tap a week and choose the employee.</p><div class="roster-grid">${roster.map(e=>{let a=state.selections.filter(s=>s.employeeId===e.id&&s.year===state.year);let one=a.filter(s=>s.round===1).flatMap(s=>s.weeks).sort((a,b)=>a-b);let two=a.filter(s=>s.round===2).flatMap(s=>s.weeks).sort((a,b)=>a-b);return `<div class="roster-card"><div class="roster-line"><div class="roster-name" draggable="true" ondragstart="dragEmployee(event,'${e.id}')">${esc(e.last)}${e.first?', '+esc(e.first):''}</div><span class="roster-seniority">${esc(e.seniority)}</span><strong class="roster-entitlement">${e.entitlement}</strong></div></div>`}).join('')||'<div class="empty">No employees on this board.</div>'}</div></section>
+ <section id="calendarSection" class="board-section"><h3>Weeks · ${state.year}</h3><div class="board-paper"><table class="board-table"><thead><tr><th class="weekcol">AL WEEK</th><th>Selected employee(s)</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+}
+let draggedEmployeeId=null;
+function dragEmployee(ev,id){draggedEmployeeId=id;ev.dataTransfer.setData('text/plain',id)}
+function dropEmployee(ev,n){ev.preventDefault();ev.currentTarget.classList.remove('over');let id=ev.dataTransfer.getData('text/plain')||draggedEmployeeId;if(id)saveAssignment(id,n)}
+function assignWeek(n){let office=state.offices.find(o=>o.id===selectedOffice),w=weeks().find(x=>x.n===n);if(blocked(office,w)){alert('That week is blocked for this board.');return}let list=empOrder(state.employees.filter(e=>e.officeId===office.id&&e.active!==false));let options=list.map(e=>`<option value="${e.id}">${esc(e.last)}${e.first?', '+esc(e.first):''}</option>`).join('');modal(`<h3>Assign week ${n} · ${fmt(w.start)}–${fmt(w.end)}</h3><div class="field"><label>Choose employee</label><select id="assignEmployee">${options}</select></div><p class="muted tiny">This records the assignment in Round ${state.round}.</p>`,()=>{let id=document.getElementById('assignEmployee').value;return saveAssignment(id,n)})}
+function saveAssignment(id,n){let e=state.employees.find(x=>x.id===id),office=state.offices.find(o=>o.id===selectedOffice),w=weeks().find(x=>x.n===n);if(!e||!office||blocked(office,w))return false;let conflicting=state.selections.some(s=>s.officeId===office.id&&s.year===state.year&&s.weeks.includes(n)&&s.employeeId!==id);if(conflicting){alert('That week is already assigned to another employee on this board.');return false}let existing=state.selections.find(s=>s.employeeId===id&&s.officeId===office.id&&s.year===state.year&&s.round===state.round);if(!existing){existing={id:crypto.randomUUID(),employeeId:id,officeId:office.id,year:state.year,round:state.round,weeks:[],method:'Manual board entry',submittedAt:new Date().toISOString()};state.selections.push(existing)}if(!existing.weeks.includes(n))existing.weeks.push(n);existing.weeks.sort((a,b)=>a-b);let firstWeeks=state.selections.filter(s=>s.employeeId===id&&s.year===state.year&&s.round===1).flatMap(s=>s.weeks).sort((a,b)=>a-b);let secondWeeks=state.selections.filter(s=>s.employeeId===id&&s.year===state.year&&s.round===2).flatMap(s=>s.weeks);let invalid=state.round===1?(firstWeeks.length>Math.min(3,e.entitlement)||!validBlocks(firstWeeks)):(firstWeeks.length+secondWeeks.length>e.entitlement);if(invalid){existing.weeks=existing.weeks.filter(x=>x!==n);if(!existing.weeks.length)state.selections=state.selections.filter(s=>s!==existing);alert(state.round===1?'First round is limited to three weeks in no more than two blocks.':'This would exceed the employee’s remaining entitlement.');return false}save();render();return true}
+function removeWeek(id,n,round){let s=state.selections.find(x=>x.employeeId===id&&x.officeId===selectedOffice&&x.year===state.year&&x.round===round);if(!s)return;s.weeks=s.weeks.filter(x=>x!==n);if(!s.weeks.length)state.selections=state.selections.filter(x=>x!==s);save();render()}
+
+function dashboard(m){let total=state.employees.length,done=state.selections.filter(s=>s.year===state.year&&s.round===1).length; m.innerHTML=head("Administrator dashboard","Manage the seven annual leave lists from your computer or phone.",`<button class="btn primary" onclick="setPage('bidding')">Open bidding control</button>`)+`
+<div class="cards"><div class="card stat"><div class="label">Bidding lists</div><strong>7</strong></div><div class="card stat"><div class="label">Employees entered</div><strong>${total}</strong></div><div class="card stat"><div class="label">First-round submissions</div><strong>${done}</strong></div><div class="card stat"><div class="label">Leave year</div><strong>${state.year}</strong></div></div>
+<div class="grid2"><section class="panel"><div class="panel-head"><h3>Office bidding lists</h3><button class="btn small" onclick="setPage('boards')">View all</button></div><div class="office-grid">${state.offices.map(o=>`<div class="office"><div><strong>${esc(o.name)}</strong><small>${state.employees.filter(e=>e.officeId===o.id&&e.active!==false).length} employees</small></div><span class="tag ${christmasBlocked(o)?"blocked":"open"}">${christmasBlocked(o)?"Christmas blocked":"Christmas open"}</span></div>`).join("")}</div></section>
+<section class="panel"><div class="panel-head"><h3>Important annual settings</h3><button class="btn small" onclick="setPage('settings')">Edit settings</button></div><p><b>Union convention:</b><br>${fmt(new Date(state.unionStart+"T12:00:00"))} – ${fmt(new Date(state.unionEnd+"T12:00:00"))}, ${state.year}</p><p><b>New AL availability:</b><br>${new Date(state.leaveAvailable+"T12:00:00").toLocaleDateString()}</p><p><b>Christmas rotation:</b><br>Groups A and B alternate; Custodians/Maintenance always open.</p><div class="notice">Early January selections may require prior-year leave. No individual leave balances are stored or displayed on this board.</div></section></div>
+<section class="panel"><div class="panel-head"><h3>Recent activity</h3><span class="tag warn">Local prototype</span></div>${state.selections.length?`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Office</th><th>Round</th><th>Weeks</th><th>Entry method</th></tr></thead><tbody>${state.selections.slice(-8).reverse().map(selectionRow).join("")}</tbody></table></div>`:`<div class="empty">No bids entered yet. Add employees, then use Bidding Control to record a test submission.</div>`}</section>`}
+function selectionRow(s){let e=state.employees.find(x=>x.id===s.employeeId);let o=state.offices.find(x=>x.id===s.officeId);return `<tr><td>${esc(e?e.first+" "+e.last:"Unknown employee")}</td><td>${esc(o?.name||"")}</td><td>${s.round}</td><td>${s.weeks.join(", ")}</td><td>${esc(s.method)}</td></tr>`}
+function boards(m){
+ // The "Seven bidding lists" navigation opens the actual leave board, not the employee directory.
+ // Board tabs inside boardPage() switch between the seven offices.
+ boardPage(m);
+}
+function employees(m){
+ let list=empOrder(state.employees.filter(e=>e.active!==false));
+ m.innerHTML=head("Employee directory","All active employees across all seven bidding lists, sorted by seniority.",`<button class="btn" onclick="setPage('settingsHub')">← Exit settings</button><button class="btn primary" onclick="employeeModal()">＋ Add employee</button>`)+`
+ <div class="panel"><div class="table-wrap"><table><thead><tr><th>Seniority order</th><th>Employee</th><th>Seniority date</th><th>Bidding list</th><th>Weeks entitled</th><th>Actions</th></tr></thead><tbody>
+ ${list.map((e,i)=>{const o=state.offices.find(x=>x.id===e.officeId);return `<tr><td>${i+1}</td><td><b>${esc(e.last)}${e.first?', '+esc(e.first):''}</b></td><td>${esc(e.seniority)}</td><td>${esc(o?.name||'Unassigned')}</td><td>${e.entitlement}</td><td><button class="btn small" onclick="employeeModal('${e.id}')">Edit / move</button> <button class="btn small danger" onclick="deactivate('${e.id}')">Archive</button></td></tr>`}).join('')||`<tr><td colspan="6" class="empty">No employees entered yet.</td></tr>`}
+ </tbody></table></div></div><div class="notice">The directory shows every active employee. The seven bidding boards remain separated by their assigned office/list. Individual leave balances are not stored here.</div>`;
+}
+function employeeModal(id){let e=state.employees.find(x=>x.id===id)||{first:"",last:"",seniority:"",entitlement:4,officeId:selectedOffice};modal(`<h3>${id?"Edit employee":"Add employee"}</h3><div class="form-row"><div class="field"><label>First name</label><input id="efirst" value="${esc(e.first)}"></div><div class="field"><label>Last name</label><input id="elast" value="${esc(e.last)}"></div></div><div class="form-row"><div class="field"><label>Seniority date</label><input id="esen" type="text" placeholder="YYYYMMDD01 or BIS MM/DD" value="${esc(e.seniority)}"></div><div class="field"><label>Weeks entitled to bid</label><select id="eweeks">${[2,3,4,5,6].map(n=>`<option ${n==e.entitlement?"selected":""}>${n}</option>`).join("")}</select></div></div><div class="field"><label>Office / bidding list</label><select id="eoffice">${state.offices.map(o=>`<option value="${o.id}" ${o.id===e.officeId?"selected":""}>${esc(o.name)}</option>`).join("")}</select></div>`,()=>{let obj={id:e.id||crypto.randomUUID(),first:document.getElementById("efirst").value.trim(),last:document.getElementById("elast").value.trim(),seniority:document.getElementById("esen").value,entitlement:Number(document.getElementById("eweeks").value),officeId:Number(document.getElementById("eoffice").value),active:true};if(!obj.last||!obj.seniority){alert("Please enter the employee’s last name and seniority date.");return false}let i=state.employees.findIndex(x=>x.id===id);if(i>=0)state.employees[i]={...state.employees[i],...obj};else state.employees.push(obj);selectedOffice=obj.officeId;save();render();return true})}
+function deactivate(id){if(confirm("Archive this employee? Their historical bidding records will be retained.")){let e=state.employees.find(x=>x.id===id);e.active=false;save();render()}}
+function calendar(m){let w=weeks();m.innerHTML=head("Calendar & blackout dates","Perpetual Monday–Sunday calendar. Confirm the week convention with your office before official use.",`<button class="btn" onclick="setPage('settings')">Edit annual settings</button>`)+`<div class="panel"><div class="panel-head"><h3>${state.year} bidding calendar</h3><span class="tag">Monday – Sunday</span></div><div class="notice warn">Union convention blackout: ${esc(state.unionStart)} through ${esc(state.unionEnd)}. This date range applies to all seven lists.</div><div class="week-grid">${w.map(x=>{let b=unionWeek(x);return `<div class="week ${b?"blackout":""}"><strong>Week ${x.n}</strong><small>${fmt(x.start)} – ${fmt(x.end)}</small>${b?'<span class="tag blocked">Union blackout</span>':""}</div>`}).join("")}</div></div><div class="panel"><h3>Christmas rotation by office</h3><div class="table-wrap"><table><thead><tr><th>Board</th><th>Christmas status ${state.year}</th></tr></thead><tbody>${state.offices.map(o=>`<tr><td>${esc(o.name)}</td><td><span class="tag ${christmasBlocked(o)?"blocked":"open"}">${christmasBlocked(o)?"Blocked":"Open"}</span></td></tr>`).join("")}</tbody></table></div></div>`}
+function bidding(m){let office=state.offices.find(o=>o.id===selectedOffice),list=empOrder(state.employees.filter(e=>e.officeId===selectedOffice&&e.active!==false));m.innerHTML=head("Bidding control","Record an employee's bid from a phone submission or a paper form.",`<select onchange="selectedOffice=Number(this.value);render()">${state.offices.map(o=>`<option value="${o.id}" ${o.id===selectedOffice?"selected":""}>${esc(o.name)}</option>`).join("")}</select><select id="roundSelect" onchange="state.round=Number(this.value);save()"><option value="1" ${state.round===1?"selected":""}>First round</option><option value="2" ${state.round===2?"selected":""}>Second round</option></select>`)+`<div class="panel"><div class="panel-head"><h3>${esc(office.name)} · ${state.round===1?"First":"Second"} round</h3><span class="tag warn">${state.deadlineHours}-hour invitation window</span></div><div class="notice">First round: up to three weeks, maximum two separate blocks. Second round: any remaining open weeks, subject to the employee's remaining entitlement. This prototype records bids manually; it does not yet send invitations or enforce real-time multi-user locks.</div><div class="table-wrap"><table><thead><tr><th>Seniority</th><th>Employee</th><th>Entitlement</th><th>Bid status</th><th>Action</th></tr></thead><tbody>${list.map((e,i)=>{let existing=state.selections.find(s=>s.employeeId===e.id&&s.officeId===e.officeId&&s.year===state.year&&s.round===state.round);return `<tr><td>${i+1}</td><td>${esc(e.last)}, ${esc(e.first)}</td><td>${e.entitlement} weeks</td><td>${existing?'<span class="tag open">Submitted · '+esc(existing.method)+'</span>':'<span class="tag">Waiting</span>'}</td><td><button class="btn small ${existing?"":"primary"}" onclick="bidModal('${e.id}')">${existing?"View / edit":"Enter bid"}</button></td></tr>`}).join("")||'<tr><td colspan="5" class="empty">Add employees to this bidding list first.</td></tr>'}</tbody></table></div></div>`}
+function bidModal(id){let e=state.employees.find(x=>x.id===id),office=state.offices.find(o=>o.id===e.officeId),existing=state.selections.find(s=>s.employeeId===id&&s.year===state.year&&s.round===state.round),ws=weeks();let already=state.selections.filter(s=>s.officeId===office.id&&s.year===state.year&&s.round===state.round&&s.employeeId!==id).flatMap(s=>s.weeks);let html=`<h3>${existing?"Review / edit bid":"Enter bid"} · ${esc(e.first)} ${esc(e.last)}</h3><p class="muted tiny">${esc(office.name)} · ${e.entitlement} weeks entitled · Round ${state.round}</p><div class="field"><label>How was this bid received?</label><select id="bmethod"><option>Paper form entered by admin</option><option>Employee phone submission (test)</option></select></div><div class="notice warn">Dates before ${esc(state.leaveAvailable)} may require prior-year leave. Verify the employee's own balance privately; do not enter it here.</div><div class="week-grid" id="bidWeeks">${ws.map(w=>{let unavailable=blocked(office,w)||already.includes(w.n)||taken(office,w,e.id);return `<label class="week ${unavailable?"blackout":""}"><span><input type="checkbox" value="${w.n}" ${unavailable?"disabled":""} ${(existing?.weeks||[]).includes(w.n)?"checked":""}> <b>Week ${w.n}</b></span><small>${fmt(w.start)} – ${fmt(w.end)}</small>${unionWeek(w)?'<span class="tag blocked">Union blackout</span>':christmasBlocked(office)&&w.start.getMonth()===11?'<span class="tag blocked">Christmas blackout</span>':already.includes(w.n)||taken(office,w,e.id)?'<span class="tag warn">Already selected</span>':""}</label>`}).join("")}</div><p class="muted tiny" id="bidCount">0 weeks selected</p>`;modal(html,()=>{let chosen=[...document.querySelectorAll('#bidWeeks input:checked')].map(x=>Number(x.value)).sort((a,b)=>a-b);let firstUsed=state.selections.filter(s=>s.employeeId===id&&s.year===state.year&&s.round===1).reduce((n,s)=>n+s.weeks.length,0);let max=state.round===1?Math.min(3,e.entitlement):Math.max(0,e.entitlement-firstUsed);if(chosen.length>max){alert(`This employee may select no more than ${max} weeks in this round.`);return false}if(state.round===1&&!validBlocks(chosen)){alert("First-round selections may be one consecutive block, or two blocks. Three separate blocks are not allowed.");return false}if(!chosen.length){alert("Select at least one week.");return false}if(existing)state.selections=state.selections.filter(s=>s!==existing);state.selections.push({id:crypto.randomUUID(),employeeId:id,officeId:office.id,year:state.year,round:state.round,weeks:chosen,method:document.getElementById("bmethod").value,submittedAt:new Date().toISOString()});save();render();return true});document.querySelectorAll('#bidWeeks input').forEach(x=>x.addEventListener('change',()=>{let c=[...document.querySelectorAll('#bidWeeks input:checked')].length;document.getElementById("bidCount").textContent=c+" weeks selected"}))}
+function validBlocks(a){if(a.length<=2)return true;let blocks=1;for(let i=1;i<a.length;i++)if(a[i]!==a[i-1]+1)blocks++;return blocks<=2}
+function settingsHub(m){
+ m.innerHTML=head("Settings","Choose what you want to manage.")+`<div class="grid2">
+ <div class="panel"><h3>Employee seniority list</h3><p class="muted">View all employees, update seniority dates, change bidding lists, and manage weeks entitled.</p><button class="btn primary" onclick="setPage('employees')">Open employee directory</button></div>
+ <div class="panel"><h3>Year settings</h3><p class="muted">Manage the leave year, calendar, holidays, union convention dates, and Christmas blackout rotation.</p><button class="btn primary" onclick="setPage('settings')">Open year settings</button></div>
+ </div><div class="toolbar" style="margin-top:16px"><button class="btn" onclick="setPage('boards')">← Back to bidding boards</button></div>`;
+}
+function settings(m){m.innerHTML=head("Year settings","Configure the annual rules. Calendar rollover creates a new year without deleting past records.",`<button class="btn" onclick="setPage('settingsHub')">← Exit settings</button>`)+`<div class="panel"><h3>Calendar year</h3><div class="form-row"><div class="field"><label>Leave year</label><input id="syear" type="number" value="${state.year}"></div><div class="field"><label>Week starts on</label><select id="sweek"><option ${state.weekStart==="Monday"?"selected":""}>Monday</option><option ${state.weekStart==="Saturday"?"selected":""}>Saturday</option></select></div></div><div class="field"><label>New annual leave available date</label><input id="savail" type="date" value="${state.leaveAvailable}"></div><p class="muted tiny">This date is used for a general early-year warning only. Individual leave balances are not stored.</p></div>
+<div class="panel"><h3>Union convention blackout</h3><div class="form-row"><div class="field"><label>First blackout date</label><input id="sunion1" type="date" value="${state.unionStart}"></div><div class="field"><label>Last blackout date</label><input id="sunion2" type="date" value="${state.unionEnd}"></div></div><p class="muted tiny">One adjustable week applied to all seven lists.</p></div>
+<div class="panel"><h3>Christmas rotation</h3><p>Group A (Main Office Window, MOU Distribution, Downtown) and Group B (Orchards/Cascade, EVDCU Tour 1, EVDCU Tour 2) alternate every year. Custodians/Maintenance is always open.</p><span class="tag ${state.year%2?"blocked":"open"}">Group A ${state.year%2?"blocked":"open"} · Group B ${state.year%2?"open":"blocked"}</span></div>
+<div class="panel"><h3>Bidding controls</h3><div class="field"><label>Invitation time limit (hours)</label><input id="shours" type="number" min="1" max="168" value="${state.deadlineHours}"></div><div class="field"><label>Early-year notice shown to employees</label><textarea id="snotes" rows="3">${esc(state.notes)}</textarea></div><div class="toolbar"><button class="btn primary" onclick="saveSettings()">Save settings</button><button class="btn" onclick="rollover()">Create next year</button></div></div>
+<div class="panel"><h3>Data & privacy</h3><p class="muted">This prototype stores data in this browser's local storage. It is not yet shared across devices, authenticated, or suitable for official employee records. Do not enter sensitive personal information.</p><div class="toolbar"><button class="btn" onclick="exportData()">Download backup JSON</button><button class="btn danger" onclick="resetData()">Reset prototype data</button></div></div>`}
+function saveSettings(){let y=Number(document.getElementById("syear").value);if(!y||y<2020||y>2100){alert("Enter a valid year.");return}state.year=y;state.weekStart=document.getElementById("sweek").value;state.leaveAvailable=document.getElementById("savail").value;state.unionStart=document.getElementById("sunion1").value;state.unionEnd=document.getElementById("sunion2").value;state.deadlineHours=Math.max(1,Math.min(168,Number(document.getElementById("shours").value)||24));state.notes=document.getElementById("snotes").value;save();render();alert("Settings saved in this browser.")}
+function rollover(){if(!confirm("Create the next calendar year? Existing year records will be retained. This prototype will advance the calendar year and carry the employee directory forward."))return;state.year++;state.unionStart=state.year+"-04-26";state.unionEnd=state.year+"-05-02";state.leaveAvailable=state.year+"-01-23";save();render()}
+function modal(body,onSave){document.getElementById("modalRoot").innerHTML=`<div class="modal-back" id="backdrop"><div class="modal">${body}<div class="modal-foot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" id="modalSave">Save / confirm</button></div></div></div>`;document.getElementById("modalSave").onclick=()=>{if(onSave()!==false)closeModal()};document.getElementById("backdrop").addEventListener("click",e=>{if(e.target.id==="backdrop")closeModal()})}
+function closeModal(){document.getElementById("modalRoot").innerHTML=""}
+function exportData(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`annual-leave-${state.year}-backup.json`;a.click();URL.revokeObjectURL(a.href)}
+
+function printYear(){
+ const office=state.offices.find(o=>o.id===selectedOffice),
+       roster=empOrder(state.employees.filter(e=>e.officeId===office.id&&e.active!==false)),
+       ws=weeks(), root=document.getElementById('printRoot');
+ const nthWeekday=(y,m,day,n)=>{const d=new Date(y,m,1,12);d.setDate(1+((day-d.getDay()+7)%7)+(n-1)*7);return d};
+ const lastWeekday=(y,m,day)=>{const d=new Date(y,m+1,0,12);d.setDate(d.getDate()-((d.getDay()-day+7)%7));return d};
+ const observed=d=>{const x=new Date(d);if(x.getDay()===6)x.setDate(x.getDate()-1);else if(x.getDay()===0)x.setDate(x.getDate()+1);return x};
+ // Keep the dates and holiday labels used on the supplied 2027 paper board.
+ const holidayDates=[
+  ["New Year's Day",new Date(state.year,0,1,12)],
+  ["MLK",nthWeekday(state.year,0,1,3)],
+  ["Presidents",nthWeekday(state.year,1,1,3)],
+  ["Memorial",lastWeekday(state.year,4,1)],
+  ["Juneteenth",new Date(state.year,5,18,12)],
+  ["July 4",new Date(state.year,6,5,12)],
+  ["Labor Day",new Date(state.year,8,6,12)],
+  ["Columbus",new Date(state.year,9,11,12)],
+  ["Veterans",new Date(state.year,10,11,12)],
+  ["Thanksgiving",new Date(state.year,10,25,12)],
+  ["Christmas",new Date(state.year,11,24,12)]
+ ];
+ const initials=e=>((e.first||'').trim().charAt(0)+(e.last||'').trim().charAt(0)).toUpperCase();
+ const pickMeta=(employee,round)=>{
+   const picks=state.selections.filter(x=>x.employeeId===employee.id&&x.officeId===office.id&&x.year===state.year&&x.round===round);
+   if(!picks.length)return '';
+   return picks.map(x=>{const d=new Date(x.submittedAt||Date.now());return `${initials(employee)} ${d.getMonth()+1}/${d.getDate()}`;}).join('<br>');
+ };
+ const holidayStart=27;
+ const rows=ws.map((w,i)=>{
+   const isUnion=unionWeek(w), isXmas=christmasBlocked(office)&&w.start<=new Date(state.year+1,0,3,12)&&w.end>=new Date(state.year,11,20,12);
+   const blackout=isUnion||isXmas;
+   const names=state.selections.filter(x=>x.officeId===office.id&&x.year===state.year&&x.weeks.includes(w.n))
+     .map(x=>state.employees.find(e=>e.id===x.employeeId)).filter(Boolean)
+     .map(e=>`${e.last}${e.first?', '+e.first:''}`).filter((v,j,a)=>a.indexOf(v)===j);
+   const employee=roster[i];
+   const holidayIndex=i-holidayStart;
+   const holiday=holidayIndex>=0&&holidayIndex<holidayDates.length?holidayDates[holidayIndex]:null;
+   const roundOne=i===holidayStart-1
+     ? `<td class="roundpick holiday-heading">HOLIDAY'S</td>`
+     : holiday
+       ? `<td class="roundpick holiday-entry">${esc(holiday[0])}-${String(holiday[1].getMonth()+1).padStart(2,'0')}/${String(holiday[1].getDate()).padStart(2,'0')}/${holiday[1].getFullYear()}</td>`
+       : `<td class="roundpick">${employee?pickMeta(employee,1):''}</td>`;
+   return `<tr>
+    <td class="datecell">${fmt(w.start)}</td>
+    <td class="datecell">${fmt(w.end)}</td>
+    <td class="week-employee ${blackout?'print-blackout':''}">${blackout?'':names.map(esc).join('<br>')}</td>
+    <td class="blackout-band"></td>
+    <td class="employee-name">${employee?esc(employee.last+(employee.first?', '+employee.first:'')):''}</td>
+    <td class="seniority-cell">${employee?esc(employee.seniority):''}</td>
+    ${roundOne}
+    <td class="roundpick">${employee?pickMeta(employee,2):''}</td>
+    <td class="entitlement-cell">${employee?employee.entitlement:''}</td>
+   </tr>`;
+ }).join('');
+ root.innerHTML=`<section class="paper-board"><header><div class="master-copy">MASTER COPY</div><h2>${esc(office.name.replace('Clerks','').trim())} AL ${state.year}</h2></header>
+ <table class="paper-grid"><colgroup><col style="width:9%"><col style="width:9%"><col style="width:22%"><col style="width:2%"><col style="width:10%"><col style="width:11%"><col style="width:17%"><col style="width:13%"><col style="width:7%"></colgroup><thead><tr><th colspan="2" class="year-head">${state.year}</th><th></th><th class="blackout-band"></th><th>Employee</th><th>Seniority</th><th>INITIAL AFTER<br>1 ROUND</th><th>INITIAL AFTER<br>2ND ROUND</th><th>Wks<br>Available</th></tr><tr><th>AL<br>BEGIN</th><th>WEEK<br>END</th><th></th><th class="blackout-band"></th><th colspan="5"></th></tr></thead><tbody>${rows}</tbody></table>
+ <footer>1ST Choice up to <b>3 weeks</b>/may be split 2 ways in full week increments. 2nd choice, you can sign for up to remainder of leave earned in year ${state.year}.</footer></section>`;
+ window.print();
+}
+
+function resetData(){if(confirm("This deletes the prototype data saved in this browser. Download a backup first if needed.")){localStorage.removeItem("alBidPrototype");state=JSON.parse(JSON.stringify(seed));save();render()}}
+async function startSharedApp(){
+ const gate=document.getElementById("authGate"),shell=document.getElementById("appShell");
+ const loginForm=document.getElementById("loginForm"),loginButton=document.getElementById("loginButton");
+ if(!window.supabase||!window.supabase.createClient){document.getElementById("loginError").textContent="The secure sign-in library could not load. Check your internet connection and refresh.";return;}
+ supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+ async function enterApp(session){
+  document.getElementById("loginError").textContent="";
+  setSyncStatus("Connecting…");
+  const {data:cloudRow,error}=await supabaseClient.from("annual_leave_app_state").select("payload,updated_at").eq("id","main").maybeSingle();
+  if(error){setSyncStatus("Database error");throw error;}
+  if(cloudRow&&cloudRow.payload){
+   state=cloudRow.payload;
+   safeLocalBackup();
+  }else{
+   // First authenticated session migrates this browser's existing prototype data.
+   const local=JSON.parse(localStorage.getItem("alBidPrototype")||"null")||state||structuredClone(seed);
+   const {error:insertError}=await supabaseClient.from("annual_leave_app_state").insert({id:"main",payload:local});
+   if(insertError&&insertError.code!=="23505")throw insertError;
+   if(insertError&&insertError.code==="23505"){
+    const {data:latest,error:latestError}=await supabaseClient.from("annual_leave_app_state").select("payload").eq("id","main").single();
+    if(latestError)throw latestError;
+    state=latest.payload;
+   }else state=local;
+   safeLocalBackup();
+  }
+  cloudReady=true;
+  gate.style.display="none";shell.style.display="";
+  setSyncStatus("Synced");
+  render();
+  if(realtimeChannel)await supabaseClient.removeChannel(realtimeChannel);
+  realtimeChannel=supabaseClient.channel("annual-leave-shared-state")
+   .on("postgres_changes",{event:"UPDATE",schema:"public",table:"annual_leave_app_state",filter:"id=eq.main"},payload=>{
+    if(!cloudReady||!payload.new?.payload)return;
+    state=payload.new.payload;
+    safeLocalBackup();
+    setSyncStatus("Updated");
+    render();
+   }).subscribe();
+ }
+ const {data:{session},error:sessionError}=await supabaseClient.auth.getSession();
+ if(sessionError)console.warn(sessionError);
+ if(session){try{await enterApp(session)}catch(err){console.error(err);document.getElementById("loginError").textContent="Could not load shared data: "+(err.message||"Please try again.");}}
+ loginForm.addEventListener("submit",async ev=>{
+  ev.preventDefault();loginButton.disabled=true;loginButton.textContent="Signing in…";
+  const username=document.getElementById("loginUsername").value.trim().toLowerCase();
+  const password=document.getElementById("loginPassword").value;
+  const internalEmail=username+"@annualleave.invalid";
+  try{
+   const {data,error}=await supabaseClient.auth.signInWithPassword({email:internalEmail,password});
+   if(error)throw error;
+   await enterApp(data.session);
+  }catch(err){console.error(err);document.getElementById("loginError").textContent="Sign-in failed. Check your username and password."; }
+  finally{loginButton.disabled=false;loginButton.textContent="Sign in";}
+ });
+}
+document.getElementById("exportBtn").onclick=exportData;
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>setPage(b.dataset.page)));
+document.querySelectorAll("[data-jump]").forEach(b=>b.addEventListener("click",()=>{let id=b.dataset.jump;if(id==="top"){window.scrollTo({top:0,behavior:"smooth"});}else{document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});}document.querySelectorAll("[data-jump]").forEach(x=>x.classList.toggle("active",x===b));}));
+startSharedApp();
+</script>
+</body>
+</html>
