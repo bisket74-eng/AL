@@ -38,7 +38,7 @@ Deno.serve(async req=>{
   if(action==="submit"){
    const invite=await getInvite(body.token),chosen=[...new Set((body.weeks||[]).map(Number))].sort((a:number,b:number)=>a-b);
    if(!chosen.length||chosen.some((n:number)=>!Number.isInteger(n)))return json({error:"Select at least one valid week."},400);
-   const {data:row,error}=await admin.from("annual_leave_app_state").select("payload").eq("id","main").single();if(error)throw error;const s=row.payload;
+   const {data:row,error}=await admin.from("annual_leave_app_state").select("payload,updated_at").eq("id","main").single();if(error)throw error;const s=row.payload;
    const employee=s.employees.find((e:any)=>e.id===invite.employee_id&&e.officeId===invite.office_id&&e.active!==false),office=s.offices.find((o:any)=>o.id===invite.office_id);
    if(!employee||!office||Number(s.year)!==invite.leave_year)throw new Error("The board has changed. Ask your supervisor for a new link.");
    const allWeeks=weeksFor(invite.leave_year),valid=new Set(allWeeks.map(x=>x.n));if(chosen.some((n:number)=>!valid.has(n)))return json({error:"One or more weeks are outside this leave year."},400);
@@ -52,9 +52,7 @@ Deno.serve(async req=>{
    if(invite.bidding_round===1&&blocks(chosen)>2)return json({error:"First-round selections may be split into no more than two blocks."},400);
    s.selections=s.selections.filter((x:any)=>!old.includes(x));
    s.selections.push({id:crypto.randomUUID(),employeeId:employee.id,officeId:office.id,year:invite.leave_year,round:invite.bidding_round,weeks:chosen,method:"Employee online submission",submittedAt:new Date().toISOString()});
-   const {data:savedRows,error:saveError}=await admin.from("annual_leave_app_state").update({payload:s}).eq("id","main").eq("updated_at",row.updated_at).select("id");if(saveError)throw saveError;if(!savedRows||savedRows.length!==1)return json({error:"The master board changed while you were submitting. Please reopen your link and submit again."},409);
-   const submittedAt=new Date().toISOString();const {error:doneError}=await admin.from("annual_leave_bid_invites").update({status:"submitted",submitted_at:submittedAt}).eq("id",invite.id).eq("status","open");if(doneError)throw doneError;
-   const {error:recordError}=await admin.from("annual_leave_bid_submissions").insert({invite_id:invite.id,employee_id:employee.id,office_id:office.id,leave_year:invite.leave_year,bidding_round:invite.bidding_round,weeks:chosen,submitted_at:submittedAt});if(recordError)throw recordError;
+   const submittedAt=new Date().toISOString();const {error:commitError}=await admin.rpc("commit_employee_bid",{p_invite_id:invite.id,p_payload:s,p_expected_updated_at:row.updated_at,p_employee_id:employee.id,p_office_id:office.id,p_leave_year:invite.leave_year,p_bidding_round:invite.bidding_round,p_weeks:chosen,p_submitted_at:submittedAt});if(commitError){const conflict=commitError.message?.includes("master board changed");return json({error:commitError.message||"Unable to commit this bid."},conflict?409:400)}
    return json({success:true});
   }
   return json({error:"Unknown action."},400);
