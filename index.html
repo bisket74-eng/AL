@@ -156,6 +156,9 @@
 .auth-error{color:#a33d3d;font-size:13px;margin-top:12px;min-height:18px}
 #syncStatus{font-size:11px;color:#d7e5ef;padding:5px 8px;border:1px solid #ffffff44;border-radius:8px}
 
+
+/* Postal-blue employee-link picker */
+.invite-select{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;border:1px solid #cbd6df;border-radius:10px;background:#f8fafc;color:#17324d;padding:13px 14px;font:inherit;font-weight:600;min-height:52px}.invite-select:focus{outline:2px solid #9cc9ca;outline-offset:2px}.invite-select span{color:#526a7d;font-size:20px}.invite-options{margin-top:7px;border:1px solid #cbd6df;border-radius:10px;overflow:auto;max-height:260px;background:#fff;box-shadow:0 8px 22px #17324d18}.invite-option{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:0;border-bottom:1px solid #e4eaf0;background:#fff;color:#203344;text-align:left;font:inherit}.invite-option:last-child{border-bottom:0}.invite-option span{font-weight:650}.invite-option small{color:#607487;font-size:13px;font-variant-numeric:tabular-nums}.invite-option.active{background:#eaf2f7;color:#17324d}.invite-option:focus{outline:2px solid #8ab8c4;outline-offset:-2px}
 </style>
 </head>
 <body>
@@ -302,9 +305,17 @@ function bidding(m){let office=state.offices.find(o=>o.id===selectedOffice),list
 function sendEmployeeBidLink(){
  const office=state.offices.find(o=>o.id===selectedOffice);
  const roster=empOrder(state.employees.filter(e=>e.officeId===office.id&&e.active!==false));
- const eligible=roster;
- const options=eligible.map(e=>{const submitted=state.selections.some(x=>x.employeeId===e.id&&x.officeId===office.id&&x.year===state.year&&x.round===state.round);return `<option value="${esc(e.id)}">${esc(e.last)}, ${esc(e.first)} · Seniority ${esc(e.seniority)}${submitted?" · already submitted — can revise":""}</option>`}).join("");
- modal(`<h3>Send employee bid link</h3><p class="muted tiny">${esc(office.name)} · ${state.year} · Round ${state.round}</p><div class="field"><label>Choose an employee (you can issue another link to revise a bid)</label><select id="inviteEmployee">${options||'<option value="">No active employees on this board</option>'}</select></div><p class="muted tiny">Only this employee can use the link. Sending a new link for this board and round closes any previous open link.</p>`,()=>{const id=document.getElementById("inviteEmployee").value;if(!id){alert("There are no active employees on this board.");return false}createEmployeeBidLink(id,office.id,state.year,state.round);return false});
+ const first=roster[0];
+ const options=roster.map((e,i)=>`<button type="button" class="invite-option ${i===0?'active':''}" data-employee="${esc(e.id)}" onclick="chooseInviteEmployee(this)"><span>${esc(e.last)}</span><small>${esc(e.seniority||'')}</small></button>`).join("");
+ modal(`<h3>Send employee bid link</h3><p class="muted tiny">${esc(office.name)} · ${state.year} · Round ${state.round}</p><div class="field"><label>Choose an employee</label><input type="hidden" id="inviteEmployee" value="${first?esc(first.id):''}"><button type="button" id="inviteEmployeeToggle" class="invite-select" onclick="toggleInviteOptions()">${first?`${esc(first.last)} · ${esc(first.seniority||'')}`:'No active employees'}<span aria-hidden="true">⌄</span></button><div id="inviteEmployeeOptions" class="invite-options hidden">${options||'<div class="muted" style="padding:12px">No active employees on this board.</div>'}</div></div><p class="muted tiny">Only this employee can use the link. Sending a new link for this board and round closes any previous open link.</p>`,()=>{const id=document.getElementById("inviteEmployee").value;if(!id){alert("There are no active employees on this board.");return false}createEmployeeBidLink(id,office.id,state.year,state.round);return false});
+}
+function toggleInviteOptions(){document.getElementById("inviteEmployeeOptions")?.classList.toggle("hidden")}
+function chooseInviteEmployee(button){
+ const id=button.dataset.employee,emp=state.employees.find(e=>e.id===id);if(!emp)return;
+ document.getElementById("inviteEmployee").value=id;
+ document.getElementById("inviteEmployeeToggle").innerHTML=`${esc(emp.last)} · ${esc(emp.seniority||'')}<span aria-hidden="true">⌄</span>`;
+ document.querySelectorAll(".invite-option").forEach(x=>x.classList.toggle("active",x===button));
+ document.getElementById("inviteEmployeeOptions").classList.add("hidden");
 }
 async function createEmployeeBidLink(employeeId,officeId,year,round){
  const btn=document.getElementById("modalSave");if(btn){btn.disabled=true;btn.textContent="Creating link…"}
