@@ -443,7 +443,13 @@ function printYear(openPrint=true){
  root.innerHTML=`<section class="paper-board"><header><div class="master-copy">MASTER COPY</div><h2>${esc(office.name.replace('Clerks','').trim())} AL ${state.year}</h2></header>
  <table class="paper-grid"><colgroup><col style="width:9%"><col style="width:9%"><col style="width:22%"><col style="width:2%"><col style="width:10%"><col style="width:11%"><col style="width:17%"><col style="width:13%"><col style="width:7%"></colgroup><thead><tr><th colspan="2" class="year-head">${state.year}</th><th></th><th class="blackout-band"></th><th>Employee</th><th>Seniority</th><th>INITIAL AFTER<br>1 ROUND</th><th>INITIAL AFTER<br>2ND ROUND</th><th>Wks<br>Available</th></tr><tr><th>AL<br>BEGIN</th><th>WEEK<br>END</th><th></th><th class="blackout-band"></th><th colspan="5"></th></tr></thead><tbody>${rows}</tbody></table>
  <footer>1ST Choice up to <b>3 weeks</b>/may be split 2 ways in full week increments. 2nd choice, you can sign for up to remainder of leave earned in year ${state.year}.</footer></section>`;
- if(openPrint)window.print();
+ if(openPrint){
+  const previousTitle=document.title;
+  // Chrome's Save as PDF uses the document title as its suggested filename.
+  document.title=`${state.year} - ${office.name}`;
+  window.addEventListener('afterprint',()=>{document.title=previousTitle;},{once:true});
+  window.print();
+ }
  return root;
 }
 
