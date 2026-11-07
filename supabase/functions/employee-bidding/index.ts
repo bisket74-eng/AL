@@ -33,7 +33,7 @@ Deno.serve(async req=>{
    const roster=s.employees.filter((e:any)=>e.officeId===office.id&&e.active!==false).sort((a:any,b:any)=>String(a.seniority).localeCompare(String(b.seniority)));
    const roundOneWeeks=s.selections.filter((x:any)=>x.employeeId===employee.id&&x.officeId===office.id&&x.year===invite.leave_year&&x.round===1).flatMap((x:any)=>x.weeks).length;
    const selections=s.selections.filter((x:any)=>x.officeId===office.id&&x.year===invite.leave_year).map((x:any)=>({employeeId:x.employeeId,employeeName:(s.employees.find((e:any)=>e.id===x.employeeId)?.last||"Employee"),weeks:x.weeks,round:x.round}));
-   return json({invite:{round:invite.bidding_round},employee:{id:employee.id,first:employee.first,last:employee.last,seniority:employee.seniority,entitlement:Number(employee.entitlement)},office:{id:office.id,name:office.name,group:office.group},config:{year:s.year,unionStart:s.unionStart,unionEnd:s.unionEnd},roundOneWeeks,selections});
+   return json({invite:{round:invite.bidding_round},employee:{id:employee.id,first:employee.first,last:employee.last,seniority:employee.seniority,entitlement:Number(employee.entitlement)},office:{id:office.id,name:office.name,group:office.group},config:{year:s.year,unionStart:s.unionStart,unionEnd:s.unionEnd,leaveAvailable:s.leaveAvailable},roundOneWeeks,selections});
   }
   if(action==="submit"){
    const invite=await getInvite(body.token),chosen=[...new Set((body.weeks||[]).map(Number))].sort((a:number,b:number)=>a-b);
