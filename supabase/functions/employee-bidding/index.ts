@@ -45,17 +45,18 @@ Deno.serve(async req=>{
    const unionStart=String(s.unionStart||"").slice(0,10),unionEnd=String(s.unionEnd||"").slice(0,10);
    const christmasStart=String(invite.leave_year)+"-12-20",christmasEnd=String(invite.leave_year+1)+"-01-03";
    const christmasApplies=office.group!=="always"&&(invite.leave_year%2===1?office.group==="A":office.group==="B");
-   const blockedDetails=allWeeks.filter(w=>{
+   // Resolve each submitted week by its one-based position in the server calendar.
+   // This avoids relying on a week-number property that may differ between deployed versions.
+   const selectedWeekDetails=chosen.map(n=>allWeeks[n-1]).filter(Boolean).map(w=>{
     const union=!!unionStart&&!!unionEnd&&w.start<=unionEnd&&w.end>=unionStart;
     const christmas=christmasApplies&&w.start<=christmasEnd&&w.end>=christmasStart;
-    return union||christmas;
-   }).map(w=>({week:w.n,start:w.start,end:w.end,reason:(!!unionStart&&!!unionEnd&&w.start<=unionEnd&&w.end>=unionStart)?"Union":"Christmas"}));
-   const blockedNumbers=blockedDetails.map(w=>w.week);
-   if(chosen.some((n:number)=>blockedNumbers.includes(n))){
-    const hit=blockedDetails.filter(w=>chosen.includes(w.week));
-    const detail=hit.map(w=>"week "+w.n+" ("+w.start+" to "+w.end+", "+w.reason+")").join("; ");
+    return {week:w.n,start:w.start,end:w.end,reason:union?"Union":christmas?"Christmas":null,blocked:union||christmas};
+   });
+   const blockedChosen=selectedWeekDetails.filter(w=>w.blocked);
+   if(blockedChosen.length){
+    const detail=blockedChosen.map(w=>"week "+w.week+" ("+w.start+" to "+w.end+", "+w.reason+")").join("; ");
     const context=" Office: "+office.name+" (group "+office.group+"); union blackout: "+(unionStart||"not set")+" through "+(unionEnd||"not set")+". "+detail;
-    return json({error:"A selected week is blocked by the server blackout check."+context,diagnostic:{office:office.name,officeGroup:office.group,leaveYear:invite.leave_year,unionStart,unionEnd,blockedWeeks:hit}},409);
+    return json({error:"A selected week is blocked by the server blackout check."+context,diagnostic:{office:office.name,officeGroup:office.group,leaveYear:invite.leave_year,unionStart,unionEnd,blockedWeeks:blockedChosen}},409);
    }
    const conflicts=s.selections.filter((x:any)=>x.officeId===office.id&&x.year===invite.leave_year&&x.employeeId!==employee.id).flatMap((x:any)=>x.weeks);if(chosen.some((n:number)=>conflicts.includes(n)))return json({error:"A selected week was just taken by another employee. Refresh your link and choose again."},409);
    const old=s.selections.filter((x:any)=>x.employeeId===employee.id&&x.officeId===office.id&&x.year===invite.leave_year&&x.round===invite.bidding_round);
