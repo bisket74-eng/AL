@@ -447,45 +447,10 @@ function printYear(openPrint=true){
  return root;
 }
 
-let pdfLibraryPromise;
-function loadPdfLibrary(){
- if(window.html2pdf)return Promise.resolve();
- if(pdfLibraryPromise)return pdfLibraryPromise;
- pdfLibraryPromise=new Promise((resolve,reject)=>{
-  const script=document.createElement("script");
-  script.src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
-  script.onload=resolve;script.onerror=()=>reject(new Error("The PDF generator could not load. Check your internet connection and try again."));
-  document.head.appendChild(script);
- });
- return pdfLibraryPromise;
-}
-async function shareBoard(){
- const button=[...document.querySelectorAll(".board-print-actions button")].find(b=>b.textContent.trim()==="Share this board");
- try{
-  if(button){button.disabled=true;button.textContent="Preparing PDF…";}
-  const source=printYear(false);
-  await loadPdfLibrary();
-  const clone=source.cloneNode(true);
-  clone.style.display="block";clone.style.width="100%";
-  const css=[...document.querySelectorAll("style")].map(el=>el.textContent.replace(/@media\\s+print\\s*\\{/g,"@media all {")).join("\\n");
-  const host=document.createElement("div");
-  host.style.cssText="position:fixed;left:-10000px;top:0;width:8.0in;background:#fff;z-index:-1";
-  const style=document.createElement("style");style.textContent=css;
-  host.append(style,clone);document.body.appendChild(host);
-  const office=state.offices.find(o=>o.id===selectedOffice);
-  const filename="Annual-Leave-"+state.year+"-"+office.name.replace(/[^a-z0-9]+/gi,"-")+".pdf";
-  try{
-   const blob=await html2pdf().set({margin:0,filename,image:{type:"jpeg",quality:0.98},html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",windowWidth:960},jsPDF:{unit:"in",format:"letter",orientation:"portrait"},pagebreak:{mode:["css","legacy"]}}).from(clone).outputPdf("blob");
-   const file=new File([blob],filename,{type:"application/pdf"});
-   if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-    await navigator.share({files:[file],title:"Annual Leave Board"});
-   }else{
-    const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);
-    alert("Your phone/browser can't share PDF files directly. The PDF has been downloaded so you can share it from your files.");
-   }
-  }finally{host.remove();}
- }catch(err){if(err?.name!=="AbortError")alert(err.message||"Unable to create or share the PDF.");}
- finally{if(button){button.disabled=false;button.textContent="Share this board";}}
+function shareBoard(){
+ // Use the browser's native print engine so the shared/saved PDF is
+ // identical to the established Print This Board output.
+ printYear();
 }
 
 function resetData(){if(confirm("This deletes the prototype data saved in this browser. Download a backup first if needed.")){localStorage.removeItem("alBidPrototype");state=JSON.parse(JSON.stringify(seed));save();render()}}
