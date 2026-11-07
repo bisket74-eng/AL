@@ -14,7 +14,7 @@ const token=new URLSearchParams(location.search).get("token");let data=null,sele
 const el=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const dateAdd=(d,n)=>{let x=new Date(d+"T12:00:00");x.setDate(x.getDate()+n);return x};
-const fmt=d=>new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric"}).format(d);
+const fmt=d=>new Intl.DateTimeFormat("en-US",{month:"short",day:"numeric"}).format(d);const dayShort=d=>["Sun","Mon","Tues","Weds","Thurs","Fri","Sat"][d.getDay()];
 function weeks(year){let a=[],d=new Date(year,0,1,12);while(d.getDay()!==1)d.setDate(d.getDate()+1);let n=1;while(d.getFullYear()<=year){let end=dateAdd(d.toISOString().slice(0,10),6);a.push({n:n++,start:new Date(d),end});d.setDate(d.getDate()+7)}return a}
 function isBlocked(w){const o=data.office,cx=data.config;const union=w.start<=new Date(cx.unionEnd+"T23:59:59")&&w.end>=new Date(cx.unionStart+"T00:00:00");let christmas=o.group!=="always"&&(cx.year%2===1?o.group==="A":o.group==="B")&&w.start<=new Date(cx.year+1,0,3,12)&&w.end>=new Date(cx.year,11,20,12);return union||christmas}
 function existingWeek(w){return data.selections.some(s=>s.weeks.includes(w.n))}
