@@ -468,7 +468,7 @@ async function startSharedApp(){
   finally{loginButton.disabled=false;loginButton.textContent="Sign in";}
  });
 }
-document.getElementById("exportBtn").onclick=exportData;
+// Export button was removed from the interface; no handler is needed.
 document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>setPage(b.dataset.page)));
 document.querySelectorAll("[data-jump]").forEach(b=>b.addEventListener("click",()=>{let id=b.dataset.jump;if(id==="top"){window.scrollTo({top:0,behavior:"smooth"});}else{document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"});}document.querySelectorAll("[data-jump]").forEach(x=>x.classList.toggle("active",x===b));}));
 startSharedApp();
