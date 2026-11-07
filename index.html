@@ -447,10 +447,67 @@ function printYear(openPrint=true){
  return root;
 }
 
-function shareBoard(){
- // Use the browser's native print engine so the shared/saved PDF is
- // identical to the established Print This Board output.
- printYear();
+let pdfLibraryPromise;
+function loadPdfLibrary(){
+ if(window.html2pdf)return Promise.resolve();
+ if(pdfLibraryPromise)return pdfLibraryPromise;
+ pdfLibraryPromise=new Promise((resolve,reject)=>{
+  const script=document.createElement("script");
+  script.src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+  script.onload=resolve;
+  script.onerror=()=>reject(new Error("The PDF creator could not load. Check your internet connection and try again."));
+  document.head.appendChild(script);
+ });
+ return pdfLibraryPromise;
+}
+async function shareBoard(){
+ const button=document.querySelector(".board-print-actions button[onclick='shareBoard()']");
+ const original=button?.textContent||"Share this board";
+ try{
+  if(button){button.disabled=true;button.textContent="Preparing PDF…";}
+  // Build the exact same Master Copy HTML used by Print This Board.
+  const source=printYear(false);
+  await loadPdfLibrary();
+  const clone=source.cloneNode(true);
+  clone.id="printRoot";
+  clone.style.cssText="display:block!important;width:100%;margin:0;padding:0;background:#fff";
+  const printCss=[...document.querySelectorAll("style")].map(el=>
+   el.textContent
+    .replace(/@media\\s+print\\s*\\{/g,"@media all {")
+    .replace(/@page\\s*\\{[^}]*\\}/g,"")
+  ).join("\\n");
+  const host=document.createElement("div");
+  host.style.cssText="position:fixed;left:0;top:0;width:10.56in;background:#fff;z-index:2147483000;opacity:1;pointer-events:none";
+  const style=document.createElement("style");
+  style.textContent=printCss+"\\nhtml,body{background:#fff!important;margin:0!important;padding:0!important}#printRoot{display:block!important;width:100%!important}.paper-board{width:100%!important}";
+  host.append(style,clone);
+  document.body.appendChild(host);
+  try{
+   const office=state.offices.find(o=>o.id===selectedOffice);
+   const filename="Annual-Leave-"+state.year+"-"+office.name.replace(/[^a-z0-9]+/gi,"-")+".pdf";
+   const blob=await html2pdf().set({
+    margin:[0.22,0.22,0.22,0.22],
+    filename,
+    image:{type:"jpeg",quality:0.99},
+    html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",windowWidth:1014,scrollX:0,scrollY:0},
+    jsPDF:{unit:"in",format:"letter",orientation:"landscape"},
+    pagebreak:{mode:["css","legacy"]}
+   }).from(clone).outputPdf("blob");
+   const file=new File([blob],filename,{type:"application/pdf"});
+   if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+    await navigator.share({files:[file],title:"Annual Leave Board"});
+   }else{
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    alert("This browser cannot open the share menu for PDF files. The matching PDF has been downloaded so you can attach it in your messaging or email app.");
+   }
+  }finally{host.remove();}
+ }catch(err){
+  if(err?.name!=="AbortError")alert(err.message||"Unable to create or share the board PDF.");
+ }finally{
+  if(button){button.disabled=false;button.textContent=original;}
+ }
 }
 
 function resetData(){if(confirm("This deletes the prototype data saved in this browser. Download a backup first if needed.")){localStorage.removeItem("alBidPrototype");state=JSON.parse(JSON.stringify(seed));save();render()}}
