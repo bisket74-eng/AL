@@ -159,6 +159,8 @@
 
 /* Postal-blue employee-link picker */
 .invite-select{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;border:1px solid #cbd6df;border-radius:10px;background:#f8fafc;color:#17324d;padding:13px 14px;font:inherit;font-weight:600;min-height:52px}.invite-select:focus{outline:2px solid #9cc9ca;outline-offset:2px}.invite-select span{color:#526a7d;font-size:20px}.invite-options{margin-top:7px;border:1px solid #cbd6df;border-radius:10px;overflow:auto;max-height:260px;background:#fff;box-shadow:0 8px 22px #17324d18}.invite-option{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:0;border-bottom:1px solid #e4eaf0;background:#fff;color:#203344;text-align:left;font:inherit}.invite-option:last-child{border-bottom:0}.invite-option span{font-weight:650}.invite-option small{color:#607487;font-size:13px;font-variant-numeric:tabular-nums}.invite-option.active{background:#eaf2f7;color:#17324d}.invite-option:focus{outline:2px solid #8ab8c4;outline-offset:-2px}
+
+.assignment-modal{position:relative;padding-top:28px}.modal-x{position:absolute;right:14px;top:10px;border:0;background:transparent;color:#526a7d;font-size:30px;line-height:1;padding:4px 8px;border-radius:8px}.modal-x:hover{background:#edf3f7}.assignment-foot{align-items:center}.modal-foot-spacer{flex:1}.btn.danger{background:#fff;border:1px solid #c96b6b;color:#a12f2f}.btn.danger:hover{background:#fff1f1}
 </style>
 </head>
 <body>
@@ -276,7 +278,24 @@ function boardPage(m){
 let draggedEmployeeId=null;
 function dragEmployee(ev,id){draggedEmployeeId=id;ev.dataTransfer.setData('text/plain',id)}
 function dropEmployee(ev,n){ev.preventDefault();ev.currentTarget.classList.remove('over');let id=ev.dataTransfer.getData('text/plain')||draggedEmployeeId;if(id)saveAssignment(id,n)}
-function assignWeek(n){let office=state.offices.find(o=>o.id===selectedOffice),w=weeks().find(x=>x.n===n);if(blocked(office,w)){alert('That week is blocked for this board.');return}let list=empOrder(state.employees.filter(e=>e.officeId===office.id&&e.active!==false));let options=list.map(e=>`<option value="${e.id}">${esc(e.last)}${e.first?', '+esc(e.first):''}</option>`).join('');modal(`<h3>Assign week ${n} · ${fmt(w.start)}–${fmt(w.end)}</h3><div class="field"><label>Choose employee</label><select id="assignEmployee">${options}</select></div><p class="muted tiny">This records the assignment in Round ${state.round}.</p>`,()=>{let id=document.getElementById('assignEmployee').value;return saveAssignment(id,n)})}
+function assignWeek(n){
+ const office=state.offices.find(o=>o.id===selectedOffice),w=weeks().find(x=>x.n===n);
+ if(blocked(office,w)){alert('That week is blocked for this board.');return}
+ const list=empOrder(state.employees.filter(e=>e.officeId===office.id&&e.active!==false));
+ const current=state.selections.find(x=>x.officeId===office.id&&x.year===state.year&&x.weeks.includes(n));
+ const currentEmployee=current&&state.employees.find(e=>e.id===current.employeeId);
+ const options=list.map(e=>`<option value="${esc(e.id)}" ${currentEmployee?.id===e.id?'selected':''}>${esc(e.last)}${e.first?', '+esc(e.first):''}</option>`).join('');
+ document.getElementById("modalRoot").innerHTML=`<div class="modal-back" id="assignBackdrop"><div class="modal assignment-modal"><button type="button" class="modal-x" aria-label="Close" onclick="closeModal()">×</button><h3>Assign week ${n} · ${fmt(w.start)}–${fmt(w.end)}</h3><div class="field"><label>Choose employee</label><select id="assignEmployee">${options}</select></div><p class="muted tiny">This records the assignment in Round ${state.round}.</p><div class="modal-foot assignment-foot">${current?'<button type="button" class="btn danger" onclick="deleteWeekAssignment('+n+')">Delete</button>':''}<span class="modal-foot-spacer"></span><button type="button" class="btn primary" onclick="confirmWeekAssignment(${n})">Save</button></div></div></div>`;
+ document.getElementById("assignBackdrop").addEventListener("click",e=>{if(e.target.id==="assignBackdrop")closeModal()});
+}
+function confirmWeekAssignment(n){const id=document.getElementById("assignEmployee")?.value;if(!id)return; if(saveAssignment(id,n))closeModal()}
+function deleteWeekAssignment(n){
+ const office=state.offices.find(o=>o.id===selectedOffice);
+ const matches=state.selections.filter(x=>x.officeId===office.id&&x.year===state.year&&x.weeks.includes(n));
+ if(!matches.length){closeModal();return}
+ matches.forEach(s=>{s.weeks=s.weeks.filter(w=>w!==n);if(!s.weeks.length)state.selections=state.selections.filter(x=>x!==s)});
+ save();render();
+}
 function saveAssignment(id,n){let e=state.employees.find(x=>x.id===id),office=state.offices.find(o=>o.id===selectedOffice),w=weeks().find(x=>x.n===n);if(!e||!office||blocked(office,w))return false;let conflicting=state.selections.some(s=>s.officeId===office.id&&s.year===state.year&&s.weeks.includes(n)&&s.employeeId!==id);if(conflicting){alert('That week is already assigned to another employee on this board.');return false}let existing=state.selections.find(s=>s.employeeId===id&&s.officeId===office.id&&s.year===state.year&&s.round===state.round);if(!existing){existing={id:crypto.randomUUID(),employeeId:id,officeId:office.id,year:state.year,round:state.round,weeks:[],method:'Manual board entry',submittedAt:new Date().toISOString()};state.selections.push(existing)}if(!existing.weeks.includes(n))existing.weeks.push(n);existing.weeks.sort((a,b)=>a-b);let firstWeeks=state.selections.filter(s=>s.employeeId===id&&s.year===state.year&&s.round===1).flatMap(s=>s.weeks).sort((a,b)=>a-b);let secondWeeks=state.selections.filter(s=>s.employeeId===id&&s.year===state.year&&s.round===2).flatMap(s=>s.weeks);let invalid=state.round===1?(firstWeeks.length>Math.min(3,e.entitlement)||!validBlocks(firstWeeks)):(firstWeeks.length+secondWeeks.length>e.entitlement);if(invalid){existing.weeks=existing.weeks.filter(x=>x!==n);if(!existing.weeks.length)state.selections=state.selections.filter(s=>s!==existing);alert(state.round===1?'First round is limited to three weeks in no more than two blocks.':'This would exceed the employee’s remaining entitlement.');return false}save();render();return true}
 function removeWeek(id,n,round){let s=state.selections.find(x=>x.employeeId===id&&x.officeId===selectedOffice&&x.year===state.year&&x.round===round);if(!s)return;s.weeks=s.weeks.filter(x=>x!==n);if(!s.weeks.length)state.selections=state.selections.filter(x=>x!==s);save();render()}
 
