@@ -163,6 +163,8 @@
 .assignment-modal{position:relative;padding-top:28px}.modal-x{position:absolute;right:14px;top:10px;border:0;background:transparent;color:#526a7d;font-size:30px;line-height:1;padding:4px 8px;border-radius:8px}.modal-x:hover{background:#edf3f7}.assignment-foot{align-items:center}.modal-foot-spacer{flex:1}.btn.danger{background:#fff;border:1px solid #c96b6b;color:#a12f2f}.btn.danger:hover{background:#fff1f1}
 
 .roster-line{display:flex;align-items:center;gap:8px;min-width:0}.roster-rank{flex:0 0 23px;width:23px;height:23px;border:1.5px solid #8da6b8;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#17324d;background:#edf3f7;font-size:12px;font-weight:750;line-height:1}.roster-line .roster-name{flex:1 1 auto;min-width:0;text-align:left}.roster-line .roster-entitlement{flex:0 0 auto;margin-left:auto;min-width:48px;text-align:right;white-space:nowrap}
+
+.board-print-actions{display:flex;justify-content:flex-end;align-items:center;gap:10px;flex-wrap:wrap}.board-print-actions .btn{white-space:nowrap}@media(max-width:700px){.page-head .toolbar.board-print-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.board-print-actions .btn{flex:0 1 auto}}
 </style>
 </head>
 <body>
@@ -271,7 +273,7 @@ function boardPage(m){
  const roster=empOrder(state.employees.filter(e=>e.officeId===office.id&&e.active!==false));
  const ws=weeks();
  const rows=ws.map(w=>{let assigned=state.selections.filter(s=>s.officeId===office.id&&s.year===state.year&&s.weeks.includes(w.n));let chips=assigned.map(s=>{let e=state.employees.find(x=>x.id===s.employeeId);return e?`<span class="assigned">${esc(e.last)} <small>R${s.round}</small><button class="edit-assignment" type="button" title="Edit assignment" aria-label="Edit ${esc(e.last)} assignment" onclick="event.stopPropagation();assignWeek(${w.n})">✎</button></span>`:""}).join("");let blockedNow=blocked(office,w);return `<tr><td class="weekcol"><b>${fmt(w.start)} – ${fmt(w.end)}</b></td><td class="week-drop ${blockedNow?'black':''}" data-week="${w.n}" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')" ondrop="dropEmployee(event,${w.n})" onclick="assignWeek(${w.n})">${blockedNow?(unionWeek(w)?'UNION BLACKOUT':'CHRISTMAS BLACKOUT'):chips||'<span class="muted">Tap or drop employee here</span>'}</td></tr>`}).join("");
- m.innerHTML=`<div class="page-head"><div><h2>Annual Leave Board · ${state.year}</h2><p>Choose a board, then choose an employee and assign their weeks.</p></div><div class="toolbar"><button class="btn primary" onclick="printYear()">Print this board</button></div></div>
+ m.innerHTML=`<div class="page-head"><div><h2>Annual Leave Board · ${state.year}</h2><p>Choose a board, then choose an employee and assign their weeks.</p></div><div class="toolbar board-print-actions"><button class="btn primary" onclick="printYear()">Print this board</button><button class="btn primary" onclick="shareBoard()">Share this board</button></div></div>
  <div class="simple-tabs">${state.offices.map(o=>`<button class="${o.id===office.id?'active':''}" onclick="selectedOffice=${o.id};render()">${esc(o.name.replace(' Clerks','').replace('EVDCU Clerks – ','EVDCU '))}</button>`).join('')}</div>
  <div class="board-actions"><label>Round <select class="board-select" id="boardRound" onchange="state.round=Number(this.value);save();render()"><option value="1" ${state.round===1?'selected':''}>First round</option><option value="2" ${state.round===2?'selected':''}>Second round</option></select></label><span class="tag">${roster.length} employees</span><button class="btn primary" onclick="sendEmployeeBidLink()">Send employee bid link</button></div>
  <section id="peopleSection" class="board-section"><h3>Employees · ${esc(office.name)}</h3><p class="board-help">Drag a name onto a week below, or tap a week and choose the employee.</p><div class="roster-grid">${roster.map((e,i)=>{let a=state.selections.filter(s=>s.employeeId===e.id&&s.year===state.year);let one=a.filter(s=>s.round===1).flatMap(s=>s.weeks).sort((a,b)=>a-b);let two=a.filter(s=>s.round===2).flatMap(s=>s.weeks).sort((a,b)=>a-b);const selectedCount=a.reduce((sum,x)=>sum+x.weeks.length,0);return `<div class="roster-card"><div class="roster-line"><span class="roster-rank" aria-label="Seniority rank ${i+1}">${i+1}</span><div class="roster-name" draggable="true" ondragstart="dragEmployee(event,'${e.id}')">${esc(e.last)}${e.first?', '+esc(e.first):''}</div><strong class="roster-entitlement">${selectedCount} of ${e.entitlement}</strong></div></div>`}).join('')||'<div class="empty">No employees on this board.</div>'}</div></section>
@@ -384,7 +386,7 @@ function modal(body,onSave){document.getElementById("modalRoot").innerHTML=`<div
 function closeModal(){document.getElementById("modalRoot").innerHTML=""}
 function exportData(){let blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`annual-leave-${state.year}-backup.json`;a.click();URL.revokeObjectURL(a.href)}
 
-function printYear(){
+function printYear(openPrint=true){
  const office=state.offices.find(o=>o.id===selectedOffice),
        roster=empOrder(state.employees.filter(e=>e.officeId===office.id&&e.active!==false)),
        ws=weeks(), root=document.getElementById('printRoot');
@@ -441,7 +443,49 @@ function printYear(){
  root.innerHTML=`<section class="paper-board"><header><div class="master-copy">MASTER COPY</div><h2>${esc(office.name.replace('Clerks','').trim())} AL ${state.year}</h2></header>
  <table class="paper-grid"><colgroup><col style="width:9%"><col style="width:9%"><col style="width:22%"><col style="width:2%"><col style="width:10%"><col style="width:11%"><col style="width:17%"><col style="width:13%"><col style="width:7%"></colgroup><thead><tr><th colspan="2" class="year-head">${state.year}</th><th></th><th class="blackout-band"></th><th>Employee</th><th>Seniority</th><th>INITIAL AFTER<br>1 ROUND</th><th>INITIAL AFTER<br>2ND ROUND</th><th>Wks<br>Available</th></tr><tr><th>AL<br>BEGIN</th><th>WEEK<br>END</th><th></th><th class="blackout-band"></th><th colspan="5"></th></tr></thead><tbody>${rows}</tbody></table>
  <footer>1ST Choice up to <b>3 weeks</b>/may be split 2 ways in full week increments. 2nd choice, you can sign for up to remainder of leave earned in year ${state.year}.</footer></section>`;
- window.print();
+ if(openPrint)window.print();
+ return root;
+}
+
+let pdfLibraryPromise;
+function loadPdfLibrary(){
+ if(window.html2pdf)return Promise.resolve();
+ if(pdfLibraryPromise)return pdfLibraryPromise;
+ pdfLibraryPromise=new Promise((resolve,reject)=>{
+  const script=document.createElement("script");
+  script.src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+  script.onload=resolve;script.onerror=()=>reject(new Error("The PDF generator could not load. Check your internet connection and try again."));
+  document.head.appendChild(script);
+ });
+ return pdfLibraryPromise;
+}
+async function shareBoard(){
+ const button=[...document.querySelectorAll(".board-print-actions button")].find(b=>b.textContent.trim()==="Share this board");
+ try{
+  if(button){button.disabled=true;button.textContent="Preparing PDF…";}
+  const source=printYear(false);
+  await loadPdfLibrary();
+  const clone=source.cloneNode(true);
+  clone.style.display="block";clone.style.width="100%";
+  const css=[...document.querySelectorAll("style")].map(el=>el.textContent.replace(/@media\\s+print\\s*\\{/g,"@media all {")).join("\\n");
+  const host=document.createElement("div");
+  host.style.cssText="position:fixed;left:-10000px;top:0;width:8.0in;background:#fff;z-index:-1";
+  const style=document.createElement("style");style.textContent=css;
+  host.append(style,clone);document.body.appendChild(host);
+  const office=state.offices.find(o=>o.id===selectedOffice);
+  const filename="Annual-Leave-"+state.year+"-"+office.name.replace(/[^a-z0-9]+/gi,"-")+".pdf";
+  try{
+   const blob=await html2pdf().set({margin:0,filename,image:{type:"jpeg",quality:0.98},html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",windowWidth:960},jsPDF:{unit:"in",format:"letter",orientation:"portrait"},pagebreak:{mode:["css","legacy"]}}).from(clone).outputPdf("blob");
+   const file=new File([blob],filename,{type:"application/pdf"});
+   if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+    await navigator.share({files:[file],title:"Annual Leave Board"});
+   }else{
+    const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);
+    alert("Your phone/browser can't share PDF files directly. The PDF has been downloaded so you can share it from your files.");
+   }
+  }finally{host.remove();}
+ }catch(err){if(err?.name!=="AbortError")alert(err.message||"Unable to create or share the PDF.");}
+ finally{if(button){button.disabled=false;button.textContent="Share this board";}}
 }
 
 function resetData(){if(confirm("This deletes the prototype data saved in this browser. Download a backup first if needed.")){localStorage.removeItem("alBidPrototype");state=JSON.parse(JSON.stringify(seed));save();render()}}
