@@ -60,12 +60,13 @@ Deno.serve(async req=>{
    }
    const conflicts=s.selections.filter((x:any)=>x.officeId===office.id&&x.year===invite.leave_year&&x.employeeId!==employee.id).flatMap((x:any)=>x.weeks);if(chosen.some((n:number)=>conflicts.includes(n)))return json({error:"A selected week was just taken by another employee. Refresh your link and choose again."},409);
    const old=s.selections.filter((x:any)=>x.employeeId===employee.id&&x.officeId===office.id&&x.year===invite.leave_year&&x.round===invite.bidding_round);
+   const already=old.flatMap((x:any)=>x.weeks);
+   if(chosen.some((n:number)=>already.includes(n)))return json({error:"A week you already submitted is locked. Choose only additional weeks."},409);
    const first=s.selections.filter((x:any)=>x.employeeId===employee.id&&x.officeId===office.id&&x.year===invite.leave_year&&x.round===1&&invite.bidding_round!==1).flatMap((x:any)=>x.weeks);
    const max=invite.bidding_round===1?Math.min(3,Number(employee.entitlement)):Math.max(0,Number(employee.entitlement)-first.length);
-   if(chosen.length>max)return json({error:"Your selection exceeds your remaining entitlement."},400);
+   if(already.length+chosen.length>max)return json({error:"Your selection exceeds your remaining entitlement. Previously submitted weeks remain locked."},400);
    if(invite.bidding_round===1&&blocks(chosen)>2)return json({error:"First-round selections may be split into no more than two blocks."},400);
-   s.selections=s.selections.filter((x:any)=>!old.includes(x));
-   s.selections.push({id:crypto.randomUUID(),employeeId:employee.id,officeId:office.id,year:invite.leave_year,round:invite.bidding_round,weeks:chosen,method:"Employee online submission",submittedAt:new Date().toISOString()});
+   if(old.length){old[0].weeks=[...new Set([...already,...chosen])].sort((a:number,b:number)=>a-b);old[0].submittedAt=new Date().toISOString();}else{s.selections.push({id:crypto.randomUUID(),employeeId:employee.id,officeId:office.id,year:invite.leave_year,round:invite.bidding_round,weeks:chosen,method:"Employee online submission",submittedAt:new Date().toISOString()});}
    const submittedAt=new Date().toISOString();const {error:commitError}=await admin.rpc("commit_employee_bid",{p_invite_id:invite.id,p_payload:s,p_expected_updated_at:row.updated_at,p_employee_id:employee.id,p_office_id:office.id,p_leave_year:invite.leave_year,p_bidding_round:invite.bidding_round,p_weeks:chosen,p_submitted_at:submittedAt});if(commitError){const conflict=commitError.message?.includes("master board changed");return json({error:commitError.message||"Unable to commit this bid."},conflict?409:400)}
    return json({success:true});
   }
